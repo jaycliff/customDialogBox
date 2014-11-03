@@ -4,7 +4,7 @@
     "use strict";
     var $document = $(document), $window = $(global);
     $document.ready(function () {
-        var customDialogueBox, allow_craziness = false;
+        var customDialogueBox, allow_ocd = false;
         (function setupDialogMarkup() {
             var overlay = document.createElement('div'),
                 cdb = document.createElement('div'),
@@ -228,7 +228,7 @@
                 return {
                     confirm: function (a, b, c, d) {
                         cdb.className = 'cdb cdb-confirm';
-                        if (allow_craziness) {
+                        if (allow_ocd) {
                             if (a === undefined) {
                                 if (arguments.length > 0) {
                                     a = 'undefined';
@@ -248,7 +248,7 @@
                     },
                     prompt: function (a, b, c, d) {
                         cdb.className = 'cdb cdb-prompt';
-                        if (allow_craziness) {
+                        if (allow_ocd) {
                             if (a === undefined) {
                                 if (arguments.length > 0) {
                                     a = 'undefined';
@@ -268,7 +268,7 @@
                     },
                     alert: function (a, b) {
                         cdb.className = 'cdb cdb-alert';
-                        if (allow_craziness) {
+                        if (allow_ocd) {
                             if (a === undefined) {
                                 if (arguments.length > 0) {
                                     a = 'undefined';

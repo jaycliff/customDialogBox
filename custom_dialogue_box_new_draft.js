@@ -128,14 +128,29 @@
                     clickHandler = function () {
                         if (entry_type !== 'alert') {
                             callback_priority = true;
-                            if ($.data(this, 'yes')) {
-                                if (typeof yesCallback === "function") {
-                                    yesCallback();
+                            switch (entry_type) {
+                            case 'confirm':
+                                if ($.data(this, 'yes')) {
+                                    if (typeof yesCallback === "function") {
+                                        yesCallback(true);
+                                    }
+                                } else {
+                                    if (typeof noCallback === 'function') {
+                                        noCallback(false);
+                                    }
                                 }
-                            } else {
-                                if (typeof noCallback === 'function') {
-                                    noCallback();
+                                break;
+                            case 'prompt':
+                                if ($.data(this, 'yes')) {
+                                    if (typeof yesCallback === "function") {
+                                        yesCallback($prompt_input.val());
+                                    }
+                                } else {
+                                    if (typeof noCallback === 'function') {
+                                        noCallback(null);
+                                    }
                                 }
+                                break;
                             }
                             callback_priority = false;
                             while (list_of_prioritized_entries.length > 0) {

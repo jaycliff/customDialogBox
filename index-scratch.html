@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <title>Custom Confirmation Dialogue</title>
+        <link rel="stylesheet" type="text/css" href="css/glyphicons.css" />
+        <style type="text/css">
+            * {
+                padding: 0;
+                margin: 0;
+            }
+            
+            #ccd-overlay {
+                position: fixed;
+                background-color: rgba(0, 0, 0, 0.5);
+                top: 0;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                display: none;
+                user-select: none;
+                -moz-user-select: none;
+                -webkit-user-select: none;
+                -ms-user-select: none;
+                -o-user-select: none;
+            }
+            
+            #ccd-overlay:before {
+                content: " ";
+                display: block;
+                height: 50%;
+            }
+            
+            div.ccd {
+                background-color: #ffffff;
+                position: fixed;
+                margin: 0 auto;
+                min-width: 320px;
+                max-width: 640px;
+                width: auto;
+                font-size: 12px;
+                padding: 20px;
+                font-family: Arial;
+                border: solid 1px rgba(0, 0, 0, 0.15);
+                border-top: solid 1px rgba(255, 255, 255, 0.15);
+                border-radius: 4px;
+                box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
+                left: -999999em;
+            }
+            
+            /*
+            div.ccd div.ccd-title {
+                position: absolute;
+                left: 4px;
+                top: 2px;
+                width: 88%;
+                font-size: 10px;
+                height: 16px;
+                line-height: 16px;
+            }
+            */
+            
+            div.ccd div.ccd-title {
+                font-size: 18px;
+                color: #202020;
+                cursor: default;
+            }
+            
+            div.ccd div.ccd-close {
+                position: absolute;
+                right: 2px;
+                top: 2px;
+                width: 16px;
+                height: 16px;
+            }
+            
+            div.ccd div.ccd-close > span {
+                display: block;
+                background-color: rgba(0, 0, 0, 0.15);
+                width: 10px;
+                height: 10px;
+                padding: 2px;
+                top: 0;
+                border-radius: 2px;
+                border: solid 1px rgba(0, 0, 0, 0.1);
+                color: #404040;
+                font-size: 10px;
+            }
+            
+            div.ccd div.ccd-close > span:hover {
+                color: #606060;
+                cursor: pointer;
+            }
+            
+            div.ccd div.ccd-close > span:active {
+                color: #202020;
+            }
+            
+            div.ccd div.ccd-message {
+                padding: 10px 0;
+                margin: 10px auto;
+                color: #404040;
+                white-space: pre-line;
+                cursor: default;
+            }
+            
+            div.ccd div.ccd-button-tray {
+                margin-top: 20px;
+                text-align: right;
+            }
+            
+            div.ccd div.ccd-button-tray button {
+                background-color: #e8e8e8;
+                padding: 4px 10px;
+                border: solid 1px rgba(0, 0, 0, 0.1);
+                border-top: solid 1px rgba(255, 255, 255, 0.1);
+                border-radius: 2px;
+                cursor: pointer;
+                min-width: 50px;
+            }
+            
+            div.ccd div.ccd-button-tray button:last-child {
+                margin-left: 10px;
+            }
+            
+            div.ccd div.ccd-button-tray > span {
+                display: none;
+            }
+            
+            /*
+            
+            div.ccd {
+                background-color: #b0b0b0;
+                border: solid 1px rgba(0, 0, 0, 0.15);
+                border-top: solid 1px rgba(255, 255, 255, 0.15);
+            }
+            
+            div.ccd div.ccd-close > span {
+                background-color: rgba(0, 0, 0, 0.15);
+                border: solid 1px rgba(0, 0, 0, 0.1);
+                color: #404040;
+            }
+            
+            div.ccd div.ccd-close > span:hover {
+                color: #606060;
+            }
+            
+            div.ccd div.ccd-close > span:active {
+                color: #202020;
+            }
+            
+            div.ccd div.ccd-message {
+                color: #ffffff;
+            }
+            
+            div.ccd div.ccd-button-tray button {
+                border: solid 1px rgba(0, 0, 0, 0.25);
+                border-top: solid 1px rgba(255, 255, 255, 0.25);
+            }
+            
+            */
+        </style>
+        <script type="text/javascript" src="jquery-1.11.1.min.js"></script>
+        <script type="text/javascript" src="classhole.js"></script>
+        <script type="text/javascript" src="custom_dialog_box.js"></script>
+        <script type="text/javascript">
+/*jslint browser: true, devel: true, nomen: false, unparam: true, sub: false, bitwise: false, forin: false */
+/*global $, jQuery, hasClass, addClass, removeClass*/
+(function (global, $) {
+    "use strict";
+    var $document = $(document);
+    $document.ready(function () {
+        var $say_something = $('#say-something');
+        // Example usage.
+        (function () {
+            var ok = function () {
+                    console.log('Hmmm... Bacon...');
+                    customConfirmationDialog('Well then... Can I EAT YOU?!', function () {
+                        console.log('Yummy....... >:)');
+                        customConfirmationDialog('Was it tasty?', function () {
+                            customConfirmationDialog('Mmmmmm!');
+                        });
+                        customConfirmationDialog('Was it juicy?', function () {
+                            customConfirmationDialog('Slurp!');
+                            customConfirmationDialog('Slurp!!!');
+                        });
+                    });
+                    customConfirmationDialog('Bloody Hell!', function () {
+                        console.log('Ahhh!');
+                    });
+                },
+                cancel = function () {
+                    console.log('No, I don\'t want to! But I just did anyway! :(');
+                    customConfirmationDialog('Hey!\n\nAre you a horse?', function () {
+                        console.log('Really???');
+                        customConfirmationDialog('...well then, can I ride you? ;)', function () {
+                            console.log('I\'m on a horse...');
+                        });
+                    });
+                };
+            $say_something.on('click', function () {
+                //customConfirmationDialog('Are you a pig?', ok, cancel);
+                customConfirmationDialog({
+                    message: 'Are you a pig?',
+                    title: 'JavaScript',
+                    yesCallback: ok,
+                    noCallback: cancel
+                });
+            });
+        }());
+    });
+}(window, jQuery));
+        </script>
+    </head>
+    <body>
+        <!-- Template by Jaycliff Arcilla -->
+        <div style="text-align: center;"><button id="say-something">Say something!</button></div>
+    </body>
+</html>

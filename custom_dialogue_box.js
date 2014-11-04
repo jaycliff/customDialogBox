@@ -292,7 +292,7 @@
                     var entry = entry_object_pool.summon();
                     entry.type = type;
                     if (a === null) {
-                        a = 'null';
+                        a = '';
                     }
                     switch (type) {
                     case 'alert':

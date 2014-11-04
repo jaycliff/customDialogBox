@@ -1,4 +1,4 @@
-customDialogBox
+customDialogueBox
 ===============
 
-Custom-made dialog boxes
+Custom-made asynchronous dialogue boxes for **modern browsers**.

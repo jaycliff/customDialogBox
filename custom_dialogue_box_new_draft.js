@@ -12,6 +12,7 @@
                 close_span = document.createElement('span'),
                 title = document.createElement('div'),
                 message = document.createElement('div'),
+                prompt_wrap = document.createElement('div'),
                 prompt_input = document.createElement('input'),
                 button_tray = document.createElement('div'),
                 ok = document.createElement('button'),
@@ -25,8 +26,12 @@
             addClass(close_span, 'glyphicon-remove');
             addClass(title, 'cdb-title');
             addClass(message, 'cdb-message');
+            addClass(prompt_wrap, 'cdb-prompt-wrap');
             addClass(prompt_input, 'cdb-prompt-input');
             addClass(button_tray, 'cdb-button-tray');
+            prompt_input.setAttribute('name', 'cdb-prompt-input');
+            prompt_input.setAttribute('placeholder', 'Enter a value');
+            prompt_input.setAttribute('value', '');
             ok.setAttribute('type', 'button');
             cancel.setAttribute('type', 'button');
             ok.textContent = 'Ok';
@@ -37,7 +42,8 @@
             cdb.appendChild(close);
             cdb.appendChild(title);
             cdb.appendChild(message);
-            cdb.appendChild(prompt_input);
+            prompt_wrap.appendChild(prompt_input);
+            cdb.appendChild(prompt_wrap);
             cdb.appendChild(button_tray);
             overlay.appendChild(cdb);
             document.body.appendChild(overlay);
@@ -57,9 +63,17 @@
                     $close = $(close),
                     $title = $(title),
                     $message = $(message),
+                    $prompt_wrap = $(prompt_wrap),
                     $prompt_input = $(prompt_input),
                     $ok = $(ok),
                     $cancel = $(cancel),
+                    promptConfirm = function (event) {
+                        if (document.activeElement === prompt_input && event.which === 13) {
+                            //$ok.trigger('click');
+                            event.preventDefault();
+                            $ok.trigger('focus');
+                        }
+                    },
                     buttonTab = function buttonTab(event) {
                         //event.stopPropagation();
                         if (event.which === 9) {
@@ -87,45 +101,53 @@
                         entry_type = entry.type;
                         switch (entry_type) {
                         case 'alert':
-                            $prompt_input.hide();
+                            $prompt_wrap.hide();
+                            $ok.text('Ok');
                             $cancel.hide();
+                            $ok[0].focus();
                             break;
                         case 'confirm':
-                            $prompt_input.hide();
-                            $cancel.show();
+                            $prompt_wrap.hide();
+                            $ok.text('Yes');
+                            $cancel.text('No').show();
                             yesCallback = entry.yesCallback;
                             noCallback = entry.noCallback;
+                            $ok[0].focus();
                             break;
                         case 'prompt':
-                            $prompt_input.show();
-                            $cancel.show();
+                            $prompt_wrap.show();
+                            $ok.text('Ok');
+                            $cancel.text('Cancel').show();
                             yesCallback = entry.yesCallback;
                             noCallback = entry.noCallback;
+                            $prompt_input[0].focus();
                             break;
                         }
                         $message.text(entry.message);
                         $title.text(entry.title);
                         //$ok.trigger('focus');
-                        $ok[0].focus();
                         positionDialog();
                         entry_object_pool.banish(entry);
                     },
-                    confirmation = function () {
+                    resetDB = function () {
                         entry_type = '';
                         $message.text('');
                         $title.text('');
                         $prompt_input.val('');
+                    },
+                    confirmation = function () {
                         if (list_of_entries.length > 0) {
-                            $cancel.show();
+                            resetDB();
                             displayEntry();
                         } else {
                             active = false;
                             $window.off('resize', positionDialog);
-                            $document.off('keydown', buttonTab);
-                            $overlay.stop().fadeOut(fade_speed);
+                            $document.off('keydown', buttonTab).off('keydown', promptConfirm);
+                            $overlay.stop().fadeOut(fade_speed, resetDB);
                         }
                     },
-                    clickHandler = function () {
+                    clickHandler = function (event) {
+                        console.log('click');
                         if (entry_type !== 'alert') {
                             callback_priority = true;
                             switch (entry_type) {
@@ -167,9 +189,10 @@
                         }
                         return {};
                     }
+                    //global.pool = pool;
                     return {
                         'summon': function () {
-                            if (pool.length > 1) {
+                            if (pool.length > 0) {
                                 return pool.pop();
                             }
                             return createObject();
@@ -235,7 +258,7 @@
                     if (!active) {
                         active = true;
                         $window.on('resize', positionDialog);
-                        $document.on('keydown', buttonTab);
+                        $document.on('keydown', buttonTab).on('keydown', promptConfirm);
                         $overlay.stop().fadeIn(fade_speed);
                         displayEntry();
                     }

@@ -174,6 +174,7 @@
                     displayEntry = function () {
                         var entry = list_of_entries.shift();
                         entry_type = entry.type;
+                        // Note: the $(element).text() method of jQuery won't change the actual text if the value being passed is undefined
                         switch (entry_type) {
                         case 'alert':
                             $prompt_wrap.hide();
@@ -290,6 +291,9 @@
                 function dbCommonality(type, a, b, c, d) {
                     var entry = entry_object_pool.summon();
                     entry.type = type;
+                    if (a === null) {
+                        a = 'null';
+                    }
                     switch (type) {
                     case 'alert':
                         entry.message = a;

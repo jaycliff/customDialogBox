@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <title>customDialogueBox</title>
+        <link rel="stylesheet" type="text/css" href="g-icons.css" />
+        <link rel="stylesheet" type="text/css" href="custom_dialogue_box.css" />
+        <style type="text/css">
+            * {
+                padding: 0;
+                margin: 0;
+            }
+            
+            body {
+                padding: 10px;
+                font-family: Arial;
+            }
+            
+            h1 {
+                text-align: center;
+                margin: 20px auto 0;
+            }
+            
+            #dialogue-boxes {
+                text-align: center;
+                padding: 10px;
+                margin: 20px auto 0;
+            }
+            
+            #dialogue-boxes button {
+                padding: 10px 20px;
+                border: none;
+                border-radius: 4px;
+                box-sizing: border-box;
+                cursor: pointer;
+            }
+            
+            #dialogue-boxes button:hover {
+                background-color: pink;
+            }
+        </style>
+        <script type="text/javascript" src="https://code.jquery.com/jquery-1.11.1.min.js"></script>
+        <script type="text/javascript" src="custom_dialogue_box.js"></script>
+        <script type="text/javascript">
+/*jslint browser: true, devel: true, nomen: false, unparam: true, sub: false, bitwise: false, forin: false */
+/*global $, jQuery, hasClass, addClass, removeClass*/
+(function (global, $) {
+    "use strict";
+    var $document = $(document);
+    $document.ready(function () {
+        var $alert = $('#alert'), $confirm = $('#confirm'), $prompt = $('#prompt');
+        $alert.on('click', function () {
+            customDialogueBox.alert('I know where you live...', 'Alert');
+        });
+        $confirm.on('click', function () {
+            customDialogueBox.confirm('Is Justin Beiber gay?', 'Confirm', function () {
+                customDialogueBox.alert('I knew it!', 'G-A-Y');
+            }, function () {
+                customDialogueBox.alert('Okay, so he\'s a girl then huh?', 'G-I-R-L');
+            });
+        });
+        $prompt.on('click', function () {
+            customDialogueBox.prompt('Enter your name', 'Prompt', function (value) {
+                customDialogueBox.alert(value + ', you are a badass!');
+            }, function () {
+                customDialogueBox.alert('Okay, whatever floats your boat...');
+            });
+        });
+    });
+}(window, jQuery));
+        </script>
+    </head>
+    <body>
+        <!-- Template by Jaycliff Arcilla -->
+        <h1>customDialogueBoxes</h1>
+        <div id="dialogue-boxes">
+            <button id="alert">Alert</button>
+            <button id="confirm">Confirm</button>
+            <button id="prompt">Prompt</button>
+        </div>
+    </body>
+</html>

@@ -99,7 +99,7 @@
             addClass(cdb, 'cdb');
             addClass(cdb, 'cdb-confirm-box');
             addClass(close, 'cdb-close');
-            addClass(close_span, 'icon-cancel');
+            addClass(close_span, 'cdb-close-icon');
             addClass(title, 'cdb-title');
             addClass(message, 'cdb-message');
             addClass(prompt_wrap, 'cdb-prompt-wrap');

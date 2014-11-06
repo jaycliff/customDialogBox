@@ -119,9 +119,6 @@ div.cdb div.cdb-close > span {
     color: #404040;
     font-size: 10px;
     background-color: rgba(0, 0, 0, 0.15);
-    /*
-    background: rgba(0, 0, 0, 0.15) no-repeat center center url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAgAAAAICAYAAADED76LAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAAN1wAADdcBQiibeAAAABl0RVh0U29mdHdhcmUAd3d3Lmlua3NjYXBlLm9yZ5vuPBoAAABVSURBVBiVhY/RCQAxCENfyw0WJ6udrKPlfizc9acBQZKoEUmWlLb5lqSU5A5MYEREUqh+ALPZ/hHlGcBca2WzfU6xRYDOBf28eWZ6vuJeGxGUCW5vvk3WRPwgFAHkAAAAAElFTkSuQmCC');
-    */
 }
 
 div.cdb div.cdb-close > span:before {

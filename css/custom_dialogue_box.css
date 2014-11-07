@@ -125,6 +125,7 @@ div.cdb div.cdb-close > span:before {
     display: block;
     margin: 0;
     font-size: 12px;
+    line-height: 12px;
 }
 
 div.cdb div.cdb-close > span:hover {

@@ -145,25 +145,10 @@
                     $cancel = $(cancel),
                     promptConfirm = function (event) {
                         if (document.activeElement === prompt_input && event.which === 13) {
-                            event.preventDefault();
+                            // Here, event.preventDefault() prevents clicking the soon-to-be-focused button when the enter button is pressed.
+                            //event.preventDefault();
                             $ok.trigger('focus');
                             //$ok.trigger('click');
-                        }
-                    },
-                    buttonTab = function buttonTab(event) {
-                        if (event.which === 9) {
-                            event.preventDefault();
-                            if (entry_type === 'alert') {
-                                if (document.activeElement !== $ok[0]) {
-                                    $ok.trigger('focus');
-                                }
-                            } else {
-                                if (document.activeElement === $ok[0]) {
-                                    $cancel.trigger('focus');
-                                } else {
-                                    $ok.trigger('focus');
-                                }
-                            }
                         }
                     },
                     positionDialog = function () {
@@ -216,7 +201,6 @@
                         } else {
                             active = false;
                             $window.off('resize', positionDialog);
-                            $document.off('keydown', buttonTab);
                             $overlay.stop().fadeOut(fade_speed, resetDB);
                         }
                     },
@@ -254,6 +238,31 @@
                         }
                         confirmation();
                     };
+                $document.on('keydown', function (event) {
+                    if (active) {
+                        //console.log(document.activeElement);
+                        //console.log(this);
+                        event.stopImmediatePropagation();
+                        if (event.which === 9) {
+                            event.preventDefault();
+                            if (entry_type === 'alert') {
+                                if (document.activeElement !== $ok[0]) {
+                                    $ok.trigger('focus');
+                                }
+                            } else {
+                                if (document.activeElement === $ok[0]) {
+                                    $cancel.trigger('focus');
+                                } else {
+                                    $ok.trigger('focus');
+                                }
+                            }
+                        }
+                    }
+                }).on('keyup keypress', function (event) {
+                    if (active) {
+                        event.stopImmediatePropagation();
+                    }
+                });
                 $prompt_input.on('keydown', promptConfirm);
                 entry_object_pool = (function () {
                     var pool = [];
@@ -344,7 +353,6 @@
                     if (!active) {
                         active = true;
                         $window.on('resize', positionDialog);
-                        $document.on('keydown', buttonTab);
                         $overlay.stop().fadeIn(fade_speed);
                         displayEntry();
                     }

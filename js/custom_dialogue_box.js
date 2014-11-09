@@ -233,7 +233,7 @@
                         confirmation();
                     };
                 (function () {
-                    var active = false, keyup_handler = function (event) {
+                    var sb_active = false, keyup_handler = function (event) {
                         var active_element = document.activeElement;
                         event.stopImmediatePropagation();
                         if (event.which === 32) {
@@ -241,7 +241,7 @@
                                 $.data(active_element, '$this').trigger('click');
                                 removeClass(active_element, 'active');
                             }
-                            active = false;
+                            sb_active = false;
                             $overlay.off('keyup', keyup_handler);
                         }
                     };
@@ -256,17 +256,17 @@
                                     $ok.trigger('focus');
                                 }
                             } else {
-                                if (active) { removeClass(document.activeElement, 'active'); }
+                                if (sb_active) { removeClass(document.activeElement, 'active'); }
                                 switch (entry_type) {
                                 case 'confirm':
                                     if (document.activeElement === ok) {
                                         $cancel.trigger('focus');
-                                        if (active) {
+                                        if (sb_active) {
                                             addClass(cancel, 'active');
                                         }
                                     } else {
                                         $ok.trigger('focus');
-                                        if (active) {
+                                        if (sb_active) {
                                             addClass(ok, 'active');
                                         }
                                     }
@@ -275,19 +275,19 @@
                                     switch (document.activeElement) {
                                     case prompt_input:
                                         $ok.trigger('focus');
-                                        if (active) {
+                                        if (sb_active) {
                                             addClass(ok, 'active');
                                         }
                                         break;
                                     case ok:
                                         $cancel.trigger('focus');
-                                        if (active) {
+                                        if (sb_active) {
                                             addClass(cancel, 'active');
                                         }
                                         break;
                                     case cancel:
                                         $prompt_input.trigger('focus');
-                                        if (active) {
+                                        if (sb_active) {
                                             addClass(prompt_input, 'active');
                                         }
                                         break;
@@ -315,9 +315,9 @@
                             break;
                         // SPACEBAR
                         case 32:
-                            if (!active && (document.activeElement === ok || document.activeElement === cancel)) {
+                            if (!sb_active && (document.activeElement === ok || document.activeElement === cancel)) {
                                 event.preventDefault();
-                                active = true;
+                                sb_active = true;
                                 addClass(document.activeElement, 'active');
                                 $overlay.on('keyup', keyup_handler);
                             }

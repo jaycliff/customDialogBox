@@ -95,6 +95,7 @@
                 ok = document.createElement('button'),
                 cancel = document.createElement('button');
             overlay.setAttribute('id', 'cdb-overlay');
+            overlay.setAttribute('tabindex', '1');
             overlay.setAttribute('style', 'display: none;');
             addClass(cdb, 'cdb');
             addClass(cdb, 'cdb-confirm-box');
@@ -143,29 +144,7 @@
                     $prompt_input = $(prompt_input),
                     $ok = $(ok),
                     $cancel = $(cancel),
-                    promptConfirm = function (event) {
-                        if (document.activeElement === prompt_input && event.which === 13) {
-                            event.preventDefault();
-                            $ok.trigger('focus');
-                            //$ok.trigger('click');
-                        }
-                    },
-                    buttonTab = function buttonTab(event) {
-                        if (event.which === 9) {
-                            event.preventDefault();
-                            if (entry_type === 'alert') {
-                                if (document.activeElement !== $ok[0]) {
-                                    $ok.trigger('focus');
-                                }
-                            } else {
-                                if (document.activeElement === $ok[0]) {
-                                    $cancel.trigger('focus');
-                                } else {
-                                    $ok.trigger('focus');
-                                }
-                            }
-                        }
-                    },
+                    buttonBehaviour,
                     positionDialog = function () {
                         $cdb.css('left', (Math.floor($document.outerWidth() / 2) - Math.floor($cdb.outerWidth() / 2)) + 'px');
                         $cdb.css('margin-top', (-Math.floor($cdb.outerHeight() / 2)) + 'px');
@@ -216,7 +195,6 @@
                         } else {
                             active = false;
                             $window.off('resize', positionDialog);
-                            $document.off('keydown', buttonTab);
                             $overlay.stop().fadeOut(fade_speed, resetDB);
                         }
                     },
@@ -254,7 +232,112 @@
                         }
                         confirmation();
                     };
-                $prompt_input.on('keydown', promptConfirm);
+                (function () {
+                    var active = false, keyup_handler = function (event) {
+                        var active_element = document.activeElement;
+                        event.stopImmediatePropagation();
+                        if (event.which === 32) {
+                            if (active_element !== prompt_input) {
+                                $.data(active_element, '$this').trigger('click');
+                                removeClass(active_element, 'active');
+                            }
+                            active = false;
+                            $overlay.off('keyup', keyup_handler);
+                        }
+                    };
+                    buttonBehaviour = function (event) {
+                        event.stopImmediatePropagation();
+                        switch (event.which) {
+                        // TAB
+                        case 9:
+                            event.preventDefault();
+                            if (entry_type === 'alert') {
+                                if (document.activeElement !== ok) {
+                                    $ok.trigger('focus');
+                                }
+                            } else {
+                                if (active) { removeClass(document.activeElement, 'active'); }
+                                switch (entry_type) {
+                                case 'confirm':
+                                    if (document.activeElement === ok) {
+                                        $cancel.trigger('focus');
+                                        if (active) {
+                                            addClass(cancel, 'active');
+                                        }
+                                    } else {
+                                        $ok.trigger('focus');
+                                        if (active) {
+                                            addClass(ok, 'active');
+                                        }
+                                    }
+                                    break;
+                                case 'prompt':
+                                    switch (document.activeElement) {
+                                    case prompt_input:
+                                        $ok.trigger('focus');
+                                        if (active) {
+                                            addClass(ok, 'active');
+                                        }
+                                        break;
+                                    case ok:
+                                        $cancel.trigger('focus');
+                                        if (active) {
+                                            addClass(cancel, 'active');
+                                        }
+                                        break;
+                                    case cancel:
+                                        $prompt_input.trigger('focus');
+                                        if (active) {
+                                            addClass(prompt_input, 'active');
+                                        }
+                                        break;
+                                    }
+                                    break;
+                                }
+                            }
+                            break;
+                        // ENTER
+                        case 13:
+                            if (document.activeElement === ok || document.activeElement === cancel) {
+                                event.preventDefault();
+                                $.data(document.activeElement, '$this').trigger('click');
+                            } else {
+                                if (document.activeElement === prompt_input) {
+                                    event.preventDefault();
+                                    $ok.trigger('focus');
+                                    //$ok.trigger('click');
+                                }
+                            }
+                            break;
+                        case 27:
+                            event.preventDefault();
+                            $close.trigger('click');
+                            break;
+                        // SPACEBAR
+                        case 32:
+                            if (!active && (document.activeElement === ok || document.activeElement === cancel)) {
+                                event.preventDefault();
+                                active = true;
+                                addClass(document.activeElement, 'active');
+                                $overlay.on('keyup', keyup_handler);
+                            }
+                            break;
+                        }
+                    };
+                }());
+                $cdb.on('mousedown click', 'button, input', function (event) {
+                    event.stopImmediatePropagation();
+                });
+                $prompt_input.on('keypress', function (event) {
+                    event.stopImmediatePropagation();
+                });
+                $overlay.on('keydown', buttonBehaviour).on('mousedown click keypress', function (event) {
+                    event.preventDefault();
+                    event.stopImmediatePropagation();
+                    //$overlay.focus();
+                });
+                $ok.data('$this', $ok);
+                $cancel.data('$this', $cancel);
                 entry_object_pool = (function () {
                     var pool = [];
                     function createObject() {
@@ -344,7 +427,6 @@
                     if (!active) {
                         active = true;
                         $window.on('resize', positionDialog);
-                        $document.on('keydown', buttonTab);
                         $overlay.stop().fadeIn(fade_speed);
                         displayEntry();
                     }

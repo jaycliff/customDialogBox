@@ -256,9 +256,9 @@
                                     $ok.trigger('focus');
                                 }
                             } else {
-                                if (sb_active) { removeClass(document.activeElement, 'active'); }
                                 switch (entry_type) {
                                 case 'confirm':
+                                    if (sb_active) { removeClass(document.activeElement, 'active'); }
                                     if (document.activeElement === ok) {
                                         $cancel.trigger('focus');
                                         if (sb_active) {
@@ -272,6 +272,7 @@
                                     }
                                     break;
                                 case 'prompt':
+                                    if (sb_active && document.activeElement !== prompt_input) { removeClass(document.activeElement, 'active'); }
                                     switch (document.activeElement) {
                                     case prompt_input:
                                         $ok.trigger('focus');
@@ -287,10 +288,9 @@
                                         break;
                                     case cancel:
                                         $prompt_input.trigger('focus');
-                                        if (sb_active) {
-                                            addClass(prompt_input, 'active');
-                                        }
                                         break;
+                                    default:
+                                        $prompt_input.trigger('focus');
                                     }
                                     break;
                                 }

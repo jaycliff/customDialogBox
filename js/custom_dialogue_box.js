@@ -87,6 +87,7 @@
                 cdb = document.createElement('div'),
                 close = document.createElement('div'),
                 close_span = document.createElement('span'),
+                content = document.createElement('div'),
                 title = document.createElement('div'),
                 message = document.createElement('div'),
                 prompt_wrap = document.createElement('div'),
@@ -101,6 +102,7 @@
             addClass(cdb, 'cdb-confirm-box');
             addClass(close, 'cdb-close');
             addClass(close_span, 'cdb-close-icon');
+            addClass(content, 'cdb-content');
             addClass(title, 'cdb-title');
             addClass(message, 'cdb-message');
             addClass(prompt_wrap, 'cdb-prompt-wrap');
@@ -117,10 +119,11 @@
             button_tray.appendChild(cancel);
             close.appendChild(close_span);
             cdb.appendChild(close);
-            cdb.appendChild(title);
-            cdb.appendChild(message);
+            content.appendChild(title);
+            content.appendChild(message);
             prompt_wrap.appendChild(prompt_input);
-            cdb.appendChild(prompt_wrap);
+            content.appendChild(prompt_wrap);
+            cdb.appendChild(content);
             cdb.appendChild(button_tray);
             overlay.appendChild(cdb);
             document.body.appendChild(overlay);

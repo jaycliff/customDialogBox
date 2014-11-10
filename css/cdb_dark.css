@@ -34,7 +34,7 @@ div.cdb div.cdb-prompt-wrap > input:focus {
     color: #e0e0e0;
 }
 
-div.cdb div.cdb-button-tray button:active, div.cdb div.cdb-button-tray button.active {
+div.cdb div.cdb-button-tray button:active, div.cdb div.cdb-button-tray button.cdb-active {
     background-color: #424242;
 }
 

@@ -187,12 +187,12 @@ div.cdb div.cdb-prompt-wrap > input:focus, div.cdb div.cdb-button-tray button:fo
     box-shadow: 0 0 1px 1px rgb(77, 144, 254);
 }
 
-div.cdb div.cdb-button-tray button:active, div.cdb div.cdb-button-tray button.active {
+div.cdb div.cdb-button-tray button:active, div.cdb div.cdb-button-tray button.cdb-active {
     background-color: #e4e4e4;
     border: 1px solid transparent;
 }
 
-div.cdb div.cdb-button-tray button:active:before, div.cdb div.cdb-button-tray button.active:before {
+div.cdb div.cdb-button-tray button:active:before, div.cdb div.cdb-button-tray button.cdb-active:before {
     box-shadow: none;
 }
 

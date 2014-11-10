@@ -147,6 +147,7 @@
                     $prompt_input = $(prompt_input),
                     $ok = $(ok),
                     $cancel = $(cancel),
+                    button_active_class = 'cdb-active',
                     buttonBehaviour,
                     positionDialog = function () {
                         $cdb.css('left', (Math.floor($document.outerWidth() / 2) - Math.floor($cdb.outerWidth() / 2)) + 'px');
@@ -198,6 +199,9 @@
                         } else {
                             active = false;
                             $window.off('resize', positionDialog);
+                            $ok.off('click', clickHandler);
+                            $cancel.off('click', clickHandler);
+                            $close.off('click', clickHandler);
                             $overlay.stop().fadeOut(fade_speed, resetDB);
                         }
                     },
@@ -242,7 +246,7 @@
                         if (event.which === 32) {
                             if (active_element !== prompt_input) {
                                 $.data(active_element, '$this').trigger('click');
-                                removeClass(active_element, 'active');
+                                removeClass(active_element, button_active_class);
                             }
                             sb_active = false;
                             $overlay.off('keyup', keyup_handler);
@@ -251,6 +255,7 @@
                     buttonBehaviour = function (event) {
                         event.stopImmediatePropagation();
                         switch (event.which) {
+                        // The default behaviour of the keys below must be overridden
                         // TAB
                         case 9:
                             event.preventDefault();
@@ -261,32 +266,32 @@
                             } else {
                                 switch (entry_type) {
                                 case 'confirm':
-                                    if (sb_active) { removeClass(document.activeElement, 'active'); }
+                                    if (sb_active) { removeClass(document.activeElement, button_active_class); }
                                     if (document.activeElement === ok) {
                                         $cancel.trigger('focus');
                                         if (sb_active) {
-                                            addClass(cancel, 'active');
+                                            addClass(cancel, button_active_class);
                                         }
                                     } else {
                                         $ok.trigger('focus');
                                         if (sb_active) {
-                                            addClass(ok, 'active');
+                                            addClass(ok, button_active_class);
                                         }
                                     }
                                     break;
                                 case 'prompt':
-                                    if (sb_active && document.activeElement !== prompt_input) { removeClass(document.activeElement, 'active'); }
+                                    if (sb_active && document.activeElement !== prompt_input) { removeClass(document.activeElement, button_active_class); }
                                     switch (document.activeElement) {
                                     case prompt_input:
                                         $ok.trigger('focus');
                                         if (sb_active) {
-                                            addClass(ok, 'active');
+                                            addClass(ok, button_active_class);
                                         }
                                         break;
                                     case ok:
                                         $cancel.trigger('focus');
                                         if (sb_active) {
-                                            addClass(cancel, 'active');
+                                            addClass(cancel, button_active_class);
                                         }
                                         break;
                                     case cancel:
@@ -321,24 +326,32 @@
                             if (!sb_active && (document.activeElement === ok || document.activeElement === cancel)) {
                                 event.preventDefault();
                                 sb_active = true;
-                                addClass(document.activeElement, 'active');
+                                addClass(document.activeElement, button_active_class);
                                 $overlay.on('keyup', keyup_handler);
                             }
                             break;
+                        default:
+                            if (document.activeElement !== prompt_input && event.which !== 122) {
+                                event.preventDefault();
+                            }
                         }
                     };
                 }());
                 $cdb.on('mousedown click', 'button, input', function (event) {
+                    // Let's allow the elements to be focused during these events, bypassing the 'event leak' prevention in $overlay below.
                     event.stopImmediatePropagation();
                 });
                 $prompt_input.on('keypress', function (event) {
+                    // Let's allow this element to be 'typable' (yes, textboxes requires both the keydown and keypress' default event to be not prevented), bypassing the 'event leak' prevention in $overlay below.
                     event.stopImmediatePropagation();
-                });
+                }); 
                 $overlay.on('keydown', buttonBehaviour).on('mousedown click keypress', function (event) {
+                    // Let's prevent the 'leakage' of the events farther up the DOM tree.
                     event.preventDefault();
                     event.stopImmediatePropagation();
                     //$overlay.focus();
                 });
+                $prompt_input.data('$self', $prompt_input);
                 $ok.data('$this', $ok);
                 $cancel.data('$this', $cancel);
                 entry_object_pool = (function () {
@@ -370,9 +383,6 @@
                 $.data(ok, 'yes', true);
                 $.data(cancel, 'yes', false);
                 $.data(close, 'yes', false);
-                $ok.on('click', clickHandler);
-                $cancel.on('click', clickHandler);
-                $close.on('click', clickHandler);
                 function stringify(value, force_actual) {
                     var string;
                     switch (value) {
@@ -430,6 +440,9 @@
                     if (!active) {
                         active = true;
                         $window.on('resize', positionDialog);
+                        $ok.on('click', clickHandler);
+                        $cancel.on('click', clickHandler);
+                        $close.on('click', clickHandler);
                         $overlay.stop().fadeIn(fade_speed);
                         displayEntry();
                     }
@@ -454,6 +467,15 @@
                         }
                         // End emulation on how the native 'alert' handles the undefined value
                         dialogueBoxCommonality('alert', a, b);
+                    },
+                    setOption: function (option_name, value) {
+                        switch (option_name.toLowerCase()) {
+                        case 'fadespeed':
+                            fade_speed = value;
+                            break;
+                        default:
+                            customDialogueBox.alert('Invalid option name "' + option_name + '"', 'Set Option');
+                        }
                     }
                 };
             }());

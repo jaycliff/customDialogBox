@@ -4,7 +4,7 @@ div.cdb {
     border-top: solid 1px rgba(255, 255, 255, 0.1);
 }
 
-div.cdb div.cdb-title, div.cdb div.cdb-message {
+div.cdb div.cdb-content {
     /* color: #dde2e4; */
     color: #e0e0e0;
 }

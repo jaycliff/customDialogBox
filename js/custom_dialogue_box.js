@@ -95,6 +95,9 @@
                 button_tray = document.createElement('div'),
                 ok = document.createElement('button'),
                 cancel = document.createElement('button');
+            prompt_input.disabled = true;
+            ok.disabled = true;
+            cancel.disabled = true;
             overlay.setAttribute('id', 'cdb-overlay');
             overlay.setAttribute('tabindex', '1');
             overlay.setAttribute('style', 'display: none;');
@@ -148,7 +151,6 @@
                     $ok = $(ok),
                     $cancel = $(cancel),
                     button_active_class = 'cdb-active',
-                    buttonBehaviour,
                     positionDialog = function () {
                         $cdb.css('left', (Math.floor($document.outerWidth() / 2) - Math.floor($cdb.outerWidth() / 2)) + 'px');
                         $cdb.css('margin-top', (-Math.floor($cdb.outerHeight() / 2)) + 'px');
@@ -192,55 +194,62 @@
                         $title.text('');
                         $prompt_input.val('');
                     },
+                    clickHandler,
                     confirmation = function () {
                         if (list_of_entries.length > 0) {
                             resetDB();
                             displayEntry();
                         } else {
                             active = false;
+                            prompt_input.disabled = true;
+                            ok.disabled = true;
+                            cancel.disabled = true;
                             $window.off('resize', positionDialog);
+                            $cdb.off('mousedown click', 'button, input', $cdb.data('event-allow-focus'));
+                            $prompt_input.off('keypress', $prompt_input.data('event-allow-typing'));
+                            $overlay.off('keydown', $overlay.data('event-controlled-keydown')).off('mousedown click keypress', $overlay.data('event-prevent-leak'));
                             $ok.off('click', clickHandler);
                             $cancel.off('click', clickHandler);
                             $close.off('click', clickHandler);
                             $overlay.stop().fadeOut(fade_speed, resetDB);
                         }
-                    },
-                    clickHandler = function (event) {
-                        if (entry_type !== 'alert') {
-                            callback_priority = true;
-                            switch (entry_type) {
-                            case 'confirm':
-                                if ($.data(this, 'yes')) {
-                                    if (typeof okCallback === "function") {
-                                        okCallback(true);
-                                    }
-                                } else {
-                                    if (typeof cancelCallback === 'function') {
-                                        cancelCallback(false);
-                                    }
-                                }
-                                break;
-                            case 'prompt':
-                                if ($.data(this, 'yes')) {
-                                    if (typeof okCallback === "function") {
-                                        okCallback($prompt_input.val());
-                                    }
-                                } else {
-                                    if (typeof cancelCallback === 'function') {
-                                        cancelCallback(null);
-                                    }
-                                }
-                                break;
-                            }
-                            callback_priority = false;
-                            while (list_of_prioritized_entries.length > 0) {
-                                list_of_entries.unshift(list_of_prioritized_entries.pop());
-                            }
-                        }
-                        confirmation();
                     };
+                clickHandler = function (event) {
+                    if (entry_type !== 'alert') {
+                        callback_priority = true;
+                        switch (entry_type) {
+                        case 'confirm':
+                            if ($.data(this, 'yes')) {
+                                if (typeof okCallback === "function") {
+                                    okCallback(true);
+                                }
+                            } else {
+                                if (typeof cancelCallback === 'function') {
+                                    cancelCallback(false);
+                                }
+                            }
+                            break;
+                        case 'prompt':
+                            if ($.data(this, 'yes')) {
+                                if (typeof okCallback === "function") {
+                                    okCallback($prompt_input.val());
+                                }
+                            } else {
+                                if (typeof cancelCallback === 'function') {
+                                    cancelCallback(null);
+                                }
+                            }
+                            break;
+                        }
+                        callback_priority = false;
+                        while (list_of_prioritized_entries.length > 0) {
+                            list_of_entries.unshift(list_of_prioritized_entries.pop());
+                        }
+                    }
+                    confirmation();
+                };
                 (function () {
-                    var sb_active = false, keyup_handler = function (event) {
+                    var sb_active = false, keyupHandler = function (event) {
                         var active_element = document.activeElement;
                         event.stopImmediatePropagation();
                         if (event.which === 32) {
@@ -249,10 +258,10 @@
                                 removeClass(active_element, button_active_class);
                             }
                             sb_active = false;
-                            $overlay.off('keyup', keyup_handler);
+                            $overlay.off('keyup', keyupHandler);
                         }
                     };
-                    buttonBehaviour = function (event) {
+                    $overlay.data('event-controlled-keydown', function (event) {
                         event.stopImmediatePropagation();
                         switch (event.which) {
                         // The default behaviour of the keys below must be overridden
@@ -327,7 +336,7 @@
                                 event.preventDefault();
                                 sb_active = true;
                                 addClass(document.activeElement, button_active_class);
-                                $overlay.on('keyup', keyup_handler);
+                                $overlay.on('keyup', keyupHandler);
                             }
                             break;
                         default:
@@ -335,17 +344,17 @@
                                 event.preventDefault();
                             }
                         }
-                    };
+                    });
                 }());
-                $cdb.on('mousedown click', 'button, input', function (event) {
+                $cdb.data('event-allow-focus', function (event) {
                     // Let's allow the elements to be focused during these events, bypassing the 'event leak' prevention in $overlay below.
                     event.stopImmediatePropagation();
                 });
-                $prompt_input.on('keypress', function (event) {
+                $prompt_input.data('event-allow-typing', function (event) {
                     // Let's allow this element to be 'typable' (yes, textboxes requires both the keydown and keypress' default event to be not prevented), bypassing the 'event leak' prevention in $overlay below.
                     event.stopImmediatePropagation();
-                }); 
-                $overlay.on('keydown', buttonBehaviour).on('mousedown click keypress', function (event) {
+                });
+                $overlay.data('event-prevent-leak', function (event) {
                     // Let's prevent the 'leakage' of the events farther up the DOM tree.
                     event.preventDefault();
                     event.stopImmediatePropagation();
@@ -440,6 +449,12 @@
                     if (!active) {
                         active = true;
                         $window.on('resize', positionDialog);
+                        $cdb.on('mousedown click', 'button, input', $cdb.data('event-allow-focus'));
+                        $prompt_input.on('keypress', $prompt_input.data('event-allow-typing'));
+                        $overlay.on('keydown', $overlay.data('event-controlled-keydown')).on('mousedown click keypress', $overlay.data('event-prevent-leak'));
+                        prompt_input.disabled = false;
+                        ok.disabled = false;
+                        cancel.disabled = false;
                         $ok.on('click', clickHandler);
                         $cancel.on('click', clickHandler);
                         $close.on('click', clickHandler);

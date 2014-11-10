@@ -94,9 +94,12 @@ div.cdb {
     left: -999999em;
 }
 
+div.cdb div.cdb-content {
+    color: #202020;
+}
+
 div.cdb div.cdb-title {
     font-size: 18px;
-    color: #202020;
     cursor: default;
 }
 
@@ -140,7 +143,6 @@ div.cdb div.cdb-close > span:active {
 div.cdb div.cdb-message {
     padding: 10px 0;
     margin: 10px auto;
-    color: #404040;
     white-space: pre-line;
     cursor: default;
 }

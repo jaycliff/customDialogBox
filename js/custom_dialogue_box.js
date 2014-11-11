@@ -80,6 +80,19 @@
 (function (global, $) {
     "use strict";
     var $document = $(document), $window = $(global);
+    function eventFire(element, event_type) {
+        var event_object;
+        if (typeof element[event_type] === "function") {
+            element[event_type]();
+            return true;
+        }
+        if (element.fireEvent) {
+            return element.fireEvent('on' + event_type);
+        }
+        event_object = document.createEvent('Events');
+        event_object.initEvent(event_type, true, false);
+        return element.dispatchEvent(event_object);
+    }
     $document.ready(function () {
         var customDialogueBox;
         (function setupDialogMarkup() {
@@ -133,6 +146,7 @@
             customDialogueBox = (function () {
                 var active = false,
                     callback_priority = false,
+                    last_focused_element,
                     entry_object_pool,
                     entry_type = '',
                     fade_speed = 80,
@@ -211,6 +225,7 @@
                             $ok.off('click', clickHandler);
                             $cancel.off('click', clickHandler);
                             $close.off('click', clickHandler);
+                            eventFire(last_focused_element, 'focus');
                             $overlay.stop().fadeOut(fade_speed, resetDB);
                         }
                     };
@@ -448,6 +463,8 @@
                     }
                     if (!active) {
                         active = true;
+                        //console.log(document.activeElement);
+                        last_focused_element = document.activeElement;
                         $window.on('resize', positionDialog);
                         $cdb.on('mousedown click', 'button, input', $cdb.data('event-allow-focus'));
                         $prompt_input.on('keypress', $prompt_input.data('event-allow-typing'));

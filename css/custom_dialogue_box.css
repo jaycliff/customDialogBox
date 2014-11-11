@@ -191,11 +191,7 @@ div.cdb div.cdb-button-tray button:before {
 }
 
 div.cdb div.cdb-button-tray button[disabled] {
-    opacity: 0.8;
-    border: solid 1px transparent;
-    background-color: transparent;
-    text-indent: -999999em;
-    cursor: default;
+    visibility: hidden;
 }
 
 div.cdb div.cdb-button-tray button[disabled]:before {

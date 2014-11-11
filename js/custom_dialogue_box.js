@@ -463,7 +463,6 @@
                     }
                     if (!active) {
                         active = true;
-                        //console.log(document.activeElement);
                         last_focused_element = document.activeElement;
                         $window.on('resize', positionDialog);
                         $cdb.on('mousedown click', 'button, input', $cdb.data('event-allow-focus'));

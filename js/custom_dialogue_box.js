@@ -17,9 +17,14 @@
 /*global $, jQuery, hasClass, addClass, removeClass*/
 (function (global) {
     "use strict";
-    var hasClass,
+    var classhole,
+        hasClass,
         addClass,
         removeClass;
+    if (global.hasOwnProperty('classhole') && typeof global.classhole === "object") {
+        return;
+    }
+    classhole = {};
     if (!document.documentElement.classList) {
         (function () {
             var collection_of_regex = {};
@@ -53,25 +58,53 @@
         };
     }
     if (typeof Object.defineProperty === "function") {
-        Object.defineProperty(global, 'hasClass', {
+        Object.defineProperty(classhole, 'hasClass', {
             enumerable: false,
             configurable: false,
             writable: false,
             value: hasClass
         });
-        Object.defineProperty(global, 'addClass', {
+        Object.defineProperty(classhole, 'addClass', {
             enumerable: false,
             configurable: false,
             writable: false,
             value: addClass
         });
-        Object.defineProperty(global, 'removeClass', {
+        Object.defineProperty(classhole, 'removeClass', {
             enumerable: false,
             configurable: false,
             writable: false,
             value: removeClass
         });
+        Object.defineProperty(global, 'classhole', {
+            enumerable: true,
+            configurable: false,
+            writable: false,
+            value: classhole
+        });
+        Object.defineProperty(global, 'hasClass', {
+            enumerable: true,
+            configurable: false,
+            writable: false,
+            value: hasClass
+        });
+        Object.defineProperty(global, 'addClass', {
+            enumerable: true,
+            configurable: false,
+            writable: false,
+            value: addClass
+        });
+        Object.defineProperty(global, 'removeClass', {
+            enumerable: true,
+            configurable: false,
+            writable: false,
+            value: removeClass
+        });
     } else {
+        classhole.hasClass = hasClass;
+        classhole.addClass = addClass;
+        classhole.removeClass = removeClass;
+        global.classhole = classhole;
         global.hasClass = hasClass;
         global.addClass = addClass;
         global.removeClass = removeClass;

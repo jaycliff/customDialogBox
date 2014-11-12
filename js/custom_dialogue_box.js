@@ -140,6 +140,7 @@
                         entry_object_pool.banish(entry);
                     },
                     resetDB = function () {
+                        cdb.className = '';
                         entry_type = '';
                         $message.text('');
                         $title.text('');

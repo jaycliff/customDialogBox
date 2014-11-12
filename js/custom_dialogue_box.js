@@ -14,102 +14,7 @@
     limitations under the License.
 */
 /*jslint browser: true, devel: true, nomen: false, unparam: true, sub: false, bitwise: false, forin: false */
-/*global $, jQuery, hasClass, addClass, removeClass*/
-(function (global) {
-    "use strict";
-    var classhole,
-        hasClass,
-        addClass,
-        removeClass;
-    if (global.hasOwnProperty('classhole') && typeof global.classhole === "object") {
-        return;
-    }
-    classhole = {};
-    if (!document.documentElement.classList) {
-        (function () {
-            var collection_of_regex = {};
-            hasClass = function (element, cls) {
-                if (!collection_of_regex.hasOwnProperty(cls)) {
-                    collection_of_regex[cls] = new RegExp('(?:^|\\s)' + cls + '(?!\\S)', 'g');
-                }
-                return collection_of_regex[cls].test(element.className);
-            };
-            addClass = function (element, cls) {
-                if (!hasClass(element, cls)) {
-                    element.className += (' ' + cls);
-                }
-            };
-            removeClass = function (element, cls) {
-                if (!collection_of_regex.hasOwnProperty(cls)) {
-                    collection_of_regex[cls] = new RegExp('(?:^|\\s)' + cls + '(?!\\S)', 'g');
-                }
-                element.className = element.className.replace(collection_of_regex[cls], '');
-            };
-        }());
-    } else {
-        hasClass = function (element, cls) {
-            return element.classList.contains(cls);
-        };
-        addClass = function (element, cls) {
-            element.classList.add(cls);
-        };
-        removeClass = function (element, cls) {
-            element.classList.remove(cls);
-        };
-    }
-    if (typeof Object.defineProperty === "function") {
-        Object.defineProperty(classhole, 'hasClass', {
-            enumerable: false,
-            configurable: false,
-            writable: false,
-            value: hasClass
-        });
-        Object.defineProperty(classhole, 'addClass', {
-            enumerable: false,
-            configurable: false,
-            writable: false,
-            value: addClass
-        });
-        Object.defineProperty(classhole, 'removeClass', {
-            enumerable: false,
-            configurable: false,
-            writable: false,
-            value: removeClass
-        });
-        Object.defineProperty(global, 'classhole', {
-            enumerable: true,
-            configurable: false,
-            writable: false,
-            value: classhole
-        });
-        Object.defineProperty(global, 'hasClass', {
-            enumerable: true,
-            configurable: false,
-            writable: false,
-            value: hasClass
-        });
-        Object.defineProperty(global, 'addClass', {
-            enumerable: true,
-            configurable: false,
-            writable: false,
-            value: addClass
-        });
-        Object.defineProperty(global, 'removeClass', {
-            enumerable: true,
-            configurable: false,
-            writable: false,
-            value: removeClass
-        });
-    } else {
-        classhole.hasClass = hasClass;
-        classhole.addClass = addClass;
-        classhole.removeClass = removeClass;
-        global.classhole = classhole;
-        global.hasClass = hasClass;
-        global.addClass = addClass;
-        global.removeClass = removeClass;
-    }
-}(window));
+/*global $, jQuery*/
 (function (global, $) {
     "use strict";
     var $document = $(document), $window = $(global);
@@ -147,16 +52,15 @@
             overlay.setAttribute('id', 'cdb-overlay');
             overlay.setAttribute('tabindex', '1');
             overlay.setAttribute('style', 'display: none;');
-            addClass(cdb, 'cdb');
-            addClass(cdb, 'cdb-confirm-box');
-            addClass(close, 'cdb-close');
-            addClass(close_span, 'cdb-close-icon');
-            addClass(content, 'cdb-content');
-            addClass(title, 'cdb-title');
-            addClass(message, 'cdb-message');
-            addClass(prompt_wrap, 'cdb-prompt-wrap');
-            addClass(prompt_input, 'cdb-prompt-input');
-            addClass(button_tray, 'cdb-button-tray');
+            cdb.className = 'cdb cdb-confirm-box';
+            close.className = 'cdb-close';
+            close_span.className = 'cdb-close-icon';
+            content.className = 'cdb-content';
+            title.className = 'cdb-title';
+            message.className = 'cdb-message';
+            prompt_wrap.className = 'cdb-prompt-wrap';
+            prompt_input.className = 'cdb-prompt-input';
+            button_tray.className = 'cdb-button-tray';
             prompt_input.setAttribute('name', 'cdb-prompt-input');
             prompt_input.setAttribute('placeholder', 'Enter a value');
             prompt_input.setAttribute('value', '');
@@ -303,7 +207,7 @@
                         if (event.which === 32) {
                             if (active_element !== prompt_input) {
                                 $.data(active_element, '$this').trigger('click');
-                                removeClass(active_element, button_active_class);
+                                active_element.classList.remove(button_active_class);
                             }
                             sb_active = false;
                             $overlay.off('keyup', keyupHandler);
@@ -323,32 +227,36 @@
                             } else {
                                 switch (entry_type) {
                                 case 'confirm':
-                                    if (sb_active) { removeClass(document.activeElement, button_active_class); }
+                                    if (sb_active) {
+                                        document.activeElement.classList.remove(button_active_class);
+                                    }
                                     if (document.activeElement === ok) {
                                         $cancel.trigger('focus');
                                         if (sb_active) {
-                                            addClass(cancel, button_active_class);
+                                            cancel.classList.add(button_active_class);
                                         }
                                     } else {
                                         $ok.trigger('focus');
                                         if (sb_active) {
-                                            addClass(ok, button_active_class);
+                                            ok.classList.add(button_active_class);
                                         }
                                     }
                                     break;
                                 case 'prompt':
-                                    if (sb_active && document.activeElement !== prompt_input) { removeClass(document.activeElement, button_active_class); }
+                                    if (sb_active && document.activeElement !== prompt_input) {
+                                        document.activeElement.classList.remove(button_active_class);
+                                    }
                                     switch (document.activeElement) {
                                     case prompt_input:
                                         $ok.trigger('focus');
                                         if (sb_active) {
-                                            addClass(ok, button_active_class);
+                                            ok.classList.add(button_active_class);
                                         }
                                         break;
                                     case ok:
                                         $cancel.trigger('focus');
                                         if (sb_active) {
-                                            addClass(cancel, button_active_class);
+                                            cancel.classList.add(button_active_class);
                                         }
                                         break;
                                     case cancel:
@@ -383,7 +291,7 @@
                             if (!sb_active && (document.activeElement === ok || document.activeElement === cancel)) {
                                 event.preventDefault();
                                 sb_active = true;
-                                addClass(document.activeElement, button_active_class);
+                                document.activeElement.classList.add(button_active_class);
                                 $overlay.on('keyup', keyupHandler);
                             }
                             break;

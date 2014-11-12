@@ -49,19 +49,19 @@
             prompt_input.disabled = true;
             ok.disabled = true;
             cancel.disabled = true;
-            overlay.setAttribute('id', 'cdb-overlay');
+            overlay.setAttribute('id', 'custom-dialogue-box-overlay');
             overlay.setAttribute('tabindex', '1');
             overlay.setAttribute('style', 'display: none;');
-            cdb.className = 'cdb cdb-confirm-box';
-            close.className = 'cdb-close';
-            close_span.className = 'cdb-close-icon';
-            content.className = 'cdb-content';
-            title.className = 'cdb-title';
-            message.className = 'cdb-message';
-            prompt_wrap.className = 'cdb-prompt-wrap';
-            prompt_input.className = 'cdb-prompt-input';
-            button_tray.className = 'cdb-button-tray';
-            prompt_input.setAttribute('name', 'cdb-prompt-input');
+            cdb.setAttribute('id', 'custom-dialogue-box');
+            close.className = 'close';
+            close_span.className = 'close-icon';
+            content.className = 'content';
+            title.className = 'title';
+            message.className = 'message';
+            prompt_wrap.className = 'prompt-wrap';
+            prompt_input.className = 'prompt-input';
+            button_tray.className = 'button-tray';
+            prompt_input.setAttribute('name', 'prompt-input');
             prompt_input.setAttribute('placeholder', 'Enter a value');
             prompt_input.setAttribute('value', '');
             ok.setAttribute('type', 'button');
@@ -101,7 +101,7 @@
                     $prompt_input = $(prompt_input),
                     $ok = $(ok),
                     $cancel = $(cancel),
-                    button_active_class = 'cdb-active',
+                    button_active_class = 'on',
                     positionDialog = function () {
                         $cdb.css('left', (Math.floor($document.outerWidth() / 2) - Math.floor($cdb.outerWidth() / 2)) + 'px');
                         $cdb.css('margin-top', (-Math.floor($cdb.outerHeight() / 2)) + 'px');
@@ -421,15 +421,15 @@
                 }
                 return {
                     confirm: function (a, b, c, d) {
-                        cdb.className = 'cdb custom-dialogue-box cdb-confirm';
+                        cdb.className = 'cdb custom-dialogue-box confirm';
                         dialogueBoxCommonality('confirm', a, b, c, d);
                     },
                     prompt: function (a, b, c, d) {
-                        cdb.className = 'cdb custom-dialogue-box cdb-prompt';
+                        cdb.className = 'cdb custom-dialogue-box prompt';
                         dialogueBoxCommonality('prompt', a, b, c, d);
                     },
                     alert: function (a, b) {
-                        cdb.className = 'cdb custom-dialogue-box cdb-alert';
+                        cdb.className = 'cdb custom-dialogue-box alert';
                         // Start emulation on how the native 'alert' handles the undefined value
                         if (a === undefined) {
                             a = stringify(a, (arguments.length > 0));

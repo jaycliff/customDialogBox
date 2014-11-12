@@ -421,15 +421,15 @@
                 }
                 return {
                     confirm: function (a, b, c, d) {
-                        cdb.className = 'cdb custom-dialogue-box confirm';
+                        cdb.className = 'confirm';
                         dialogueBoxCommonality('confirm', a, b, c, d);
                     },
                     prompt: function (a, b, c, d) {
-                        cdb.className = 'cdb custom-dialogue-box prompt';
+                        cdb.className = 'prompt';
                         dialogueBoxCommonality('prompt', a, b, c, d);
                     },
                     alert: function (a, b) {
-                        cdb.className = 'cdb custom-dialogue-box alert';
+                        cdb.className = 'alert';
                         // Start emulation on how the native 'alert' handles the undefined value
                         if (a === undefined) {
                             a = stringify(a, (arguments.length > 0));

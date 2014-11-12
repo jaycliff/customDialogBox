@@ -4,6 +4,10 @@ customDialogueBox
 Custom-made asynchronous dialogue boxes for **modern browsers**.
 Basically, this is a (somewhat non-blocking) replacement for the browser's built-in dialogue boxes (alert, confirm, and prompt).
 
+## Notes
+
+This requires the classList shim.
+
 ## customDialogueBox.alert
 
 ```javascript
@@ -25,7 +29,7 @@ customDialogueBox.confirm('This is a confirm dialogue box', 'Confirm', function 
 ## customDialogueBox.prompt
 
 ```javascript
-customDialogueBox.alert('This is a prompt dialogue box', 'Prompt', function (value) {
+customDialogueBox.prompt('This is a prompt dialogue box', 'Prompt', function (value) {
     // Outputs whatever you wrote on the prompt's input textbox;
     console.log(value);
 }, function (value) {

@@ -32,7 +32,7 @@
         return element.dispatchEvent(event_object);
     }
     $document.ready(function () {
-        var customDialogueBox;
+        var customDialogueBox, id = 'custom-dialogue-box';
         (function setupDialogMarkup() {
             var overlay = document.createElement('div'),
                 cdb = document.createElement('div'),
@@ -49,10 +49,10 @@
             prompt_input.disabled = true;
             ok.disabled = true;
             cancel.disabled = true;
-            overlay.setAttribute('id', 'custom-dialogue-box-overlay');
+            overlay.setAttribute('id', id + '-overlay');
             overlay.setAttribute('tabindex', '1');
             overlay.setAttribute('style', 'display: none;');
-            cdb.setAttribute('id', 'custom-dialogue-box');
+            cdb.setAttribute('id', id);
             close.className = 'close';
             close_span.className = 'close-icon';
             content.className = 'content';
@@ -110,6 +110,9 @@
                         var entry = list_of_entries.shift();
                         entry_type = entry.type;
                         cdb.classList.add(entry_type);
+                        if (cdb.id !== id) {
+                            cdb.setAttribute('id', id);
+                        }
                         // Note: the $(element).text(value) method of jQuery won't change the actual textContent of the element if the value being passed is undefined
                         switch (entry_type) {
                         case 'alert':

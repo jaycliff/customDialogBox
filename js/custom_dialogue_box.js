@@ -109,6 +109,7 @@
                     displayEntry = function () {
                         var entry = list_of_entries.shift();
                         entry_type = entry.type;
+                        cdb.classList.add(entry_type);
                         // Note: the $(element).text(value) method of jQuery won't change the actual textContent of the element if the value being passed is undefined
                         switch (entry_type) {
                         case 'alert':
@@ -140,7 +141,7 @@
                         entry_object_pool.banish(entry);
                     },
                     resetDB = function () {
-                        cdb.className = '';
+                        cdb.classList.remove(entry_type);
                         entry_type = '';
                         $message.text('');
                         $title.text('');
@@ -422,15 +423,12 @@
                 }
                 return {
                     confirm: function (a, b, c, d) {
-                        cdb.className = 'confirm';
                         dialogueBoxCommonality('confirm', a, b, c, d);
                     },
                     prompt: function (a, b, c, d) {
-                        cdb.className = 'prompt';
                         dialogueBoxCommonality('prompt', a, b, c, d);
                     },
                     alert: function (a, b) {
-                        cdb.className = 'alert';
                         // Start emulation on how the native 'alert' handles the undefined value
                         if (a === undefined) {
                             a = stringify(a, (arguments.length > 0));

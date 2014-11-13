@@ -336,9 +336,7 @@ if (!String.prototype.trim) {
                 $ok.data('$this', $ok);
                 $cancel.data('$this', $cancel);
                 entry_object_pool = (function () {
-                    var pool = [], then = function (callback) {
-                        this.callback = callback;
-                    };
+                    var pool = [];
                     function createObject() {
                         if (typeof Object.create === "function") {
                             return Object.create(null);
@@ -347,14 +345,10 @@ if (!String.prototype.trim) {
                     }
                     return {
                         'summon': function () {
-                            var obj;
                             if (pool.length > 0) {
-                                obj = pool.pop();
-                            } else {
-                                obj = createObject();
+                                return pool.pop();
                             }
-                            obj.then = then;
-                            return obj;
+                            return createObject();
                         },
                         'banish': function (entry) {
                             var key;

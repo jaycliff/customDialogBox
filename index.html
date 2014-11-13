@@ -2,7 +2,7 @@
 <html>
     <head>
         <meta charset="utf-8" />
-        <title>customDialogueBox</title>
+        <title>customDialogueBox by Jaycliff Arcilla</title>
         <!-- Check these out: http://iconmart.in/ and http://fontello.com/ -->
         <link rel="stylesheet" type="text/css" href="css/custom_dialogue_box.css" />
         <style type="text/css">
@@ -19,6 +19,12 @@
             h1 {
                 text-align: center;
                 margin: 20px auto 0;
+            }
+            
+            h2 {
+                text-align: center;
+                margin: 10px auto 0;
+                font-size: 0.75em;
             }
             
             #dialogue-boxes {
@@ -72,15 +78,15 @@ if (!String.prototype.trim) {
         customDialogueBox.setOption('fadespeed', 100);
         $alert.on('click', function () {
             customDialogueBox.alert('I know where you live...', 'Alert').then(function () {
-                customDialogueBox.alert('...but I easily forget');
+                customDialogueBox.alert('...but I easily forget.', 'Alert?');
             });
         });
         $confirm.on('click', function () {
             customDialogueBox.confirm('Is Justin Beiber gay?', 'Confirm').then(function (value) {
                 if (value) {
-                    customDialogueBox.alert('I knew it!', 'G-A-Y');
+                    customDialogueBox.alert('I knew it!', 'Confirmed!');
                 } else {
-                    customDialogueBox.alert('Okay, so he\'s a girl then huh?', 'G-I-R-L');
+                    customDialogueBox.alert('Okay, so he must be bisexual huh?', 'Somewhere In The Middle...');
                 }
             });
         });
@@ -90,12 +96,12 @@ if (!String.prototype.trim) {
                     if (value.trim() === '') {
                         customDialogueBox.alert('You are a badass!');
                     } else {
-                        customDialogueBox.alert(value.trim() + ', you are a badass!');
+                        customDialogueBox.alert(value.trim() + ', you are a badass!', 'Oh Yeah!');
                     }
                 } else {
-                    customDialogueBox.alert('Okay, whatever floats your boat...').then(function () {
-                        customDialogueBox.alert('...you little turd.').then(function () {
-                            customDialogueBox.alert('Just kidding :)');
+                    customDialogueBox.alert('Okay, whatever floats your boat...', 'Kill Joy...').then(function () {
+                        customDialogueBox.alert('...but your boat is leaking water.', 'Hmmm...').then(function () {
+                            customDialogueBox.alert('...and your job is to point it in the right direction. :)', '*Gulp*');
                         });
                     });
                 }
@@ -108,6 +114,7 @@ if (!String.prototype.trim) {
     <body>
         <!-- Template by Jaycliff Arcilla -->
         <h1>customDialogueBoxes</h1>
+        <h2>by Jaycliff Arcilla</h2>
         <div id="dialogue-boxes">
             <button id="alert">Alert</button>
             <button id="confirm">Confirm</button>

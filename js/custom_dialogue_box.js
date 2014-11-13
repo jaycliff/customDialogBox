@@ -13,7 +13,7 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 */
-/*jslint browser: true, devel: true, nomen: false, unparam: true, sub: false, bitwise: false, forin: false */
+/*jslint browser: true, devel: true, nomen: false, unparam: false, sub: false, bitwise: false, forin: false */
 /*global $, jQuery*/
 if (!String.prototype.trim) {
     (function (rtrim) {
@@ -110,7 +110,7 @@ if (!String.prototype.trim) {
                     $ok = $(ok),
                     $cancel = $(cancel),
                     button_active_class = 'on',
-                    dialogueBoxCommonality,
+                    createDialogueBoxEntry,
                     positionDialog = function () {
                         $cdb.css('left', (Math.floor($document.outerWidth() / 2) - Math.floor($cdb.outerWidth() / 2)) + 'px');
                         $cdb.css('margin-top', (-Math.floor($cdb.outerHeight() / 2)) + 'px');
@@ -182,7 +182,7 @@ if (!String.prototype.trim) {
                             $overlay.stop().fadeOut(fade_speed, resetDB);
                         }
                     };
-                clickHandler = function (event) {
+                clickHandler = function () {
                     callback_priority = true;
                     switch (entry_type) {
                     case 'confirm':
@@ -390,7 +390,7 @@ if (!String.prototype.trim) {
                     if (Object.freeze) {
                         Object.freeze(then_carrier);
                     }
-                    dialogueBoxCommonality = function (type, a, b, c, d) {
+                    createDialogueBoxEntry = function (type, a, b, c) {
                         entry = entry_object_pool.summon();
                         entry.type = type;
                         entry.message = stringify(a);
@@ -426,7 +426,7 @@ if (!String.prototype.trim) {
                     };
                 }());
                 return {
-                    alert: function (a, b, c) {
+                    alert: function (a, b) {
                         // Start emulation on how the native 'alert' handles the undefined value
                         if (a === undefined) {
                             a = stringify(a, (arguments.length > 0));
@@ -435,13 +435,13 @@ if (!String.prototype.trim) {
                             b = stringify(b, (arguments.length > 1));
                         }
                         // End emulation on how the native 'alert' handles the undefined value
-                        return dialogueBoxCommonality('alert', a, b, c);
+                        return createDialogueBoxEntry('alert', a, b);
                     },
-                    confirm: function (a, b, c) {
-                        return dialogueBoxCommonality('confirm', a, b, c);
+                    confirm: function (a, b) {
+                        return createDialogueBoxEntry('confirm', a, b);
                     },
-                    prompt: function (a, b, c, d) {
-                        return dialogueBoxCommonality('prompt', a, b, c, d);
+                    prompt: function (a, b, c) {
+                        return createDialogueBoxEntry('prompt', a, b, c);
                     },
                     setOption: function (option_name, value) {
                         switch (option_name.toLowerCase()) {

@@ -68,7 +68,7 @@ customDialogueBox.confirm('This is a confirm dialogue box with no title.').then(
 
 ### Syntax
 
-`customDialogueBox.confirm(message, default_value, title).then(callback);`
+`customDialogueBox.prompt(message, default_value, title).then(callback);`
 
    * **message** is an optional string of text that you want to display in the dialogue box's body.
    * **default_value** is an optional value that will serve as the input box's default value.

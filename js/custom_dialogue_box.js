@@ -15,6 +15,15 @@
 */
 /*jslint browser: true, devel: true, nomen: false, unparam: true, sub: false, bitwise: false, forin: false */
 /*global $, jQuery*/
+if (!String.prototype.trim) {
+    (function (rtrim) {
+        "use strict";
+        String.prototype.trim = function () {
+            return this.replace(rtrim, '');
+        };
+        // Make sure we trim BOM and NBSP
+    }(/^[\s\uFEFF\xA0]+|[\s\uFEFF\xA0]+$/g));
+}
 (function (global, $) {
     "use strict";
     var $document = $(document), $window = $(global);
@@ -282,8 +291,8 @@
                             } else {
                                 if (document.activeElement === prompt_input) {
                                     event.preventDefault();
-                                    $ok.trigger('focus');
-                                    //$ok.trigger('click');
+                                    //$ok.trigger('focus');
+                                    $ok.trigger('click');
                                 }
                             }
                             break;
@@ -301,6 +310,7 @@
                             }
                             break;
                         default:
+                            // Prevent all keyboard keys' default behavious, except when the prompt's input box is active, or the F11 key is pressed.
                             if (document.activeElement !== prompt_input && event.which !== 122) {
                                 event.preventDefault();
                             }
@@ -360,7 +370,7 @@
                         string = 'null';
                         break;
                     case undefined:
-                        string = force_actual ? 'undefined' : '';
+                        string = force_actual ? "undefined" : '';
                         break;
                     default:
                         string = (typeof value === "string") ? value : value.toString();
@@ -370,49 +380,32 @@
                 function dialogueBoxCommonality(type, a, b, c, d) {
                     var entry = entry_object_pool.summon();
                     entry.type = type;
+                    // The browser's built-in dialogue boxes always coerces the first argument into a string, that's why we're doing the same.
+                    entry.message = stringify(a);
                     switch (type) {
                     case 'prompt':
-                        switch (typeof a) {
-                        case 'function':
-                            entry.message = '';
+                        if (typeof b === "function") {
                             entry.default_value = '';
                             entry.title = '';
-                            entry.callback = a;
-                            break;
-                        default:
-                            entry.message = stringify(a);
-                            if (typeof b === "function") {
-                                entry.default_value = '';
+                            entry.callback = b;
+                        } else {
+                            entry.default_value = (stringify(b)).trim();
+                            if (typeof c === "function") {
                                 entry.title = '';
-                                entry.callback = b;
+                                entry.callback = c;
                             } else {
-                                entry.default_value = stringify(b);
-                                if (typeof c === "function") {
-                                    entry.title = '';
-                                    entry.callback = c;
-                                } else {
-                                    entry.title = stringify(c);
-                                    entry.callback = d;
-                                }
+                                entry.title = stringify(c);
+                                entry.callback = d;
                             }
                         }
                         break;
                     default:
-                        switch (typeof a) {
-                        case 'function':
-                            entry.message = '';
+                        if (typeof b === "function") {
                             entry.title = '';
-                            entry.callback = a;
-                            break;
-                        default:
-                            entry.message = stringify(a);
-                            if (typeof b === "function") {
-                                entry.title = '';
-                                entry.callback = b;
-                            } else {
-                                entry.title = stringify(b);
-                                entry.callback = c;
-                            }
+                            entry.callback = b;
+                        } else {
+                            entry.title = stringify(b);
+                            entry.callback = c;
                         }
                     }
                     if (callback_priority) {
@@ -439,24 +432,21 @@
                 }
                 return {
                     alert: function (a, b, c) {
-                        // Since alert() is mostly used for debugging, let's make sure that 'a' always gets converted to string.
                         // Start emulation on how the native 'alert' handles the undefined value
                         if (a === undefined) {
                             a = stringify(a, (arguments.length > 0));
-                        } else {
-                            a = stringify(a);
                         }
                         if (b === undefined) {
                             b = stringify(b, (arguments.length > 1));
                         }
                         // End emulation on how the native 'alert' handles the undefined value
-                        dialogueBoxCommonality('alert', a, b, c);
+                        return dialogueBoxCommonality('alert', a, b, c);
                     },
                     confirm: function (a, b, c) {
-                        dialogueBoxCommonality('confirm', a, b, c);
+                        return dialogueBoxCommonality('confirm', a, b, c);
                     },
                     prompt: function (a, b, c, d) {
-                        dialogueBoxCommonality('prompt', a, b, c, d);
+                        return dialogueBoxCommonality('prompt', a, b, c, d);
                     },
                     setOption: function (option_name, value) {
                         switch (option_name.toLowerCase()) {

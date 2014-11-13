@@ -55,6 +55,15 @@
         <script type="text/javascript">
 /*jslint browser: true, devel: true, nomen: false, unparam: true, sub: false, bitwise: false, forin: false */
 /*global $, jQuery, hasClass, addClass, removeClass*/
+if (!String.prototype.trim) {
+    (function (rtrim) {
+        "use strict";
+        String.prototype.trim = function () {
+            return this.replace(rtrim, '');
+        };
+        // Make sure we trim BOM and NBSP
+    }(/^[\s\uFEFF\xA0]+|[\s\uFEFF\xA0]+$/g));
+}
 (function (global, $) {
     "use strict";
     var $document = $(document);
@@ -65,17 +74,25 @@
             customDialogueBox.alert('I know where you live...', 'Alert');
         });
         $confirm.on('click', function () {
-            customDialogueBox.confirm('Is Justin Beiber gay?', 'Confirm', function () {
-                customDialogueBox.alert('I knew it!', 'G-A-Y');
-            }, function () {
-                customDialogueBox.alert('Okay, so he\'s a girl then huh?', 'G-I-R-L');
+            customDialogueBox.confirm('Is Justin Beiber gay?', 'Confirm', function (value) {
+                if (value) {
+                    customDialogueBox.alert('I knew it!', 'G-A-Y');
+                } else {
+                    customDialogueBox.alert('Okay, so he\'s a girl then huh?', 'G-I-R-L');
+                }
             });
         });
         $prompt.on('click', function () {
-            customDialogueBox.prompt('Enter your name', 'Prompt', function (value) {
-                customDialogueBox.alert(value + ', you are a badass!');
-            }, function () {
-                customDialogueBox.alert('Okay, whatever floats your boat...');
+            customDialogueBox.prompt('Enter your name', 'Jaycliff', 'Prompt', function (value) {
+                if (typeof value === "string") {
+                    if (value.trim() === '') {
+                        customDialogueBox.alert('You are a badass!');
+                    } else {
+                        customDialogueBox.alert(value.trim() + ', you are a badass!');
+                    }
+                } else {
+                    customDialogueBox.alert('Okay, whatever floats your boat...');
+                }
             });
         });
     });

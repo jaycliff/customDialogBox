@@ -87,8 +87,7 @@
                     entry_object_pool,
                     entry_type = '',
                     fade_speed = 80,
-                    okCallback,
-                    cancelCallback,
+                    callback,
                     list_of_entries = [],
                     // list_of_prioritized_entries is for the instances made inside the callbacks
                     list_of_prioritized_entries = [],
@@ -109,6 +108,7 @@
                     displayEntry = function () {
                         var entry = list_of_entries.shift();
                         entry_type = entry.type;
+                        callback = entry.callback;
                         cdb.classList.add(entry_type);
                         if (cdb.id !== id) {
                             cdb.setAttribute('id', id);
@@ -125,17 +125,17 @@
                             $prompt_wrap.hide();
                             $ok.text('Yes');
                             $cancel.text('No').show();
-                            okCallback = entry.okCallback;
-                            cancelCallback = entry.cancelCallback;
                             $ok.trigger('focus');
                             break;
                         case 'prompt':
                             $prompt_wrap.show();
                             $ok.text('Ok');
                             $cancel.text('Cancel').show();
-                            okCallback = entry.okCallback;
-                            cancelCallback = entry.cancelCallback;
+                            $prompt_input.val(entry.default_value);
                             $prompt_input.trigger('focus');
+                            if (entry.default_value) {
+                                $prompt_input.trigger('select');
+                            }
                             break;
                         }
                         $message.text(entry.message);
@@ -145,6 +145,7 @@
                     },
                     resetDB = function () {
                         cdb.classList.remove(entry_type);
+                        callback = undefined;
                         entry_type = '';
                         $message.text('');
                         $title.text('');
@@ -172,36 +173,35 @@
                         }
                     };
                 clickHandler = function (event) {
-                    if (entry_type !== 'alert') {
-                        callback_priority = true;
-                        switch (entry_type) {
-                        case 'confirm':
+                    callback_priority = true;
+                    switch (entry_type) {
+                    case 'confirm':
+                        if (typeof callback === "function") {
                             if ($.data(this, 'yes')) {
-                                if (typeof okCallback === "function") {
-                                    okCallback(true);
-                                }
+                                callback(true);
                             } else {
-                                if (typeof cancelCallback === 'function') {
-                                    cancelCallback(false);
-                                }
+                                callback(false);
                             }
-                            break;
-                        case 'prompt':
+                        }
+                        break;
+                    case 'prompt':
+                        if (typeof callback === "function") {
                             if ($.data(this, 'yes')) {
-                                if (typeof okCallback === "function") {
-                                    okCallback($prompt_input.val());
-                                }
+                                callback($prompt_input.val());
                             } else {
-                                if (typeof cancelCallback === 'function') {
-                                    cancelCallback(null);
-                                }
+                                callback(null);
                             }
-                            break;
                         }
-                        callback_priority = false;
-                        while (list_of_prioritized_entries.length > 0) {
-                            list_of_entries.unshift(list_of_prioritized_entries.pop());
+                        break;
+                    default:
+                        // This is for alert
+                        if (typeof callback === "function") {
+                            callback();
                         }
+                    }
+                    callback_priority = false;
+                    while (list_of_prioritized_entries.length > 0) {
+                        list_of_entries.unshift(list_of_prioritized_entries.pop());
                     }
                     confirmation();
                 };
@@ -371,34 +371,47 @@
                     var entry = entry_object_pool.summon();
                     entry.type = type;
                     switch (type) {
-                    case 'alert':
-                        entry.message = stringify(a);
-                        entry.title = stringify(b);
+                    case 'prompt':
+                        switch (typeof a) {
+                        case 'function':
+                            entry.message = '';
+                            entry.default_value = '';
+                            entry.title = '';
+                            entry.callback = a;
+                            break;
+                        default:
+                            entry.message = stringify(a);
+                            if (typeof b === "function") {
+                                entry.default_value = '';
+                                entry.title = '';
+                                entry.callback = b;
+                            } else {
+                                entry.default_value = stringify(b);
+                                if (typeof c === "function") {
+                                    entry.title = '';
+                                    entry.callback = c;
+                                } else {
+                                    entry.title = stringify(c);
+                                    entry.callback = d;
+                                }
+                            }
+                        }
                         break;
                     default:
                         switch (typeof a) {
-                        case 'object':
-                            entry.message = stringify(a.message);
-                            entry.title = stringify(a.title);
-                            entry.okCallback = a.yes || a.ok || a.okCallback || a.yesCallback;
-                            entry.cancelCallback = a.no || a.cancel || a.cancelCallback || a.noCallback;
-                            break;
                         case 'function':
                             entry.message = '';
                             entry.title = '';
-                            entry.okCallback = a;
-                            entry.cancelCallback = b;
+                            entry.callback = a;
                             break;
                         default:
                             entry.message = stringify(a);
                             if (typeof b === "function") {
                                 entry.title = '';
-                                entry.okCallback = b;
-                                entry.cancelCallback = c;
+                                entry.callback = b;
                             } else {
                                 entry.title = stringify(b);
-                                entry.okCallback = c;
-                                entry.cancelCallback = d;
+                                entry.callback = c;
                             }
                         }
                     }
@@ -425,22 +438,25 @@
                     }
                 }
                 return {
-                    confirm: function (a, b, c, d) {
-                        dialogueBoxCommonality('confirm', a, b, c, d);
-                    },
-                    prompt: function (a, b, c, d) {
-                        dialogueBoxCommonality('prompt', a, b, c, d);
-                    },
-                    alert: function (a, b) {
+                    alert: function (a, b, c) {
+                        // Since alert() is mostly used for debugging, let's make sure that 'a' always gets converted to string.
                         // Start emulation on how the native 'alert' handles the undefined value
                         if (a === undefined) {
                             a = stringify(a, (arguments.length > 0));
+                        } else {
+                            a = stringify(a);
                         }
                         if (b === undefined) {
                             b = stringify(b, (arguments.length > 1));
                         }
                         // End emulation on how the native 'alert' handles the undefined value
-                        dialogueBoxCommonality('alert', a, b);
+                        dialogueBoxCommonality('alert', a, b, c);
+                    },
+                    confirm: function (a, b, c) {
+                        dialogueBoxCommonality('confirm', a, b, c);
+                    },
+                    prompt: function (a, b, c, d) {
+                        dialogueBoxCommonality('prompt', a, b, c, d);
                     },
                     setOption: function (option_name, value) {
                         switch (option_name.toLowerCase()) {
@@ -452,6 +468,19 @@
                         }
                     }
                 };
+            }());
+            (function () {
+                var key, toStringer = function (key) {
+                    return function () {
+                        return 'function ' + key + '() { [imagi-native code] }';
+                    };
+                };
+                for (key in customDialogueBox) {
+                    if (Object.prototype.hasOwnProperty.call(customDialogueBox, key)) {
+                        customDialogueBox[key].toString = toStringer(key);
+                    }
+                }
+                key = null;
             }());
         }());
         if (typeof Object.defineProperty === "function") {

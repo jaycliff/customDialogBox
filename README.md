@@ -24,6 +24,12 @@ This requires the jQuery library and the classList shim.
 customDialogueBox.alert('This is an alert dialogue box', 'Alert');
 ```
 
+```javascript
+customDialogueBox.alert('This is an alert dialogue box with no title, but has an optional callback', function () {
+    console.log('Alert callback');
+});
+```
+
 ## customDialogueBox.confirm()
 
 ### Syntax
@@ -46,6 +52,16 @@ customDialogueBox.confirm('This is a confirm dialogue box', 'Confirm', function 
 });
 ```
 
+```javascript
+customDialogueBox.confirm('This is a confirm dialogue box with no title.', function (value) {
+    if (value) {
+        console.log('You clicked "Yes".');
+    } else {
+        console.log('You clicked "No".');
+    }
+});
+```
+
 ## customDialogueBox.prompt()
 
 ### Syntax
@@ -60,7 +76,17 @@ customDialogueBox.confirm('This is a confirm dialogue box', 'Confirm', function 
 ### Example Usage
 
 ```javascript
-customDialogueBox.prompt('This is a prompt dialogue box', 'Prompt', function (value) {
+customDialogueBox.prompt('This is a prompt dialogue box with no title, but has a default value "nerd"', 'nerd', function (value) {
+    if (value !== null) {
+        alert('Hello ' + value);
+    } else {
+        console.log('You clicked "Cancel".');
+    }
+});
+```
+
+```javascript
+customDialogueBox.prompt('This is a prompt dialogue box with no default value, but has a title.', '', 'Prompt', function (value) {
     if (value !== null) {
         alert('Hello ' + value);
     } else {

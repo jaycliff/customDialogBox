@@ -8,7 +8,7 @@ Basically, this is a replacement for the browser's built-in dialogue boxes (aler
 
 This requires the jQuery library and the classList shim.
 
-## customDialogueBox.alert
+## customDialogueBox.alert()
 
 ### Syntax
 
@@ -24,7 +24,7 @@ This requires the jQuery library and the classList shim.
 customDialogueBox.alert('This is an alert dialogue box', 'Alert');
 ```
 
-## customDialogueBox.confirm
+## customDialogueBox.confirm()
 
 ### Syntax
 
@@ -46,7 +46,7 @@ customDialogueBox.confirm('This is a confirm dialogue box', 'Confirm', function 
 });
 ```
 
-## customDialogueBox.prompt
+## customDialogueBox.prompt()
 
 ### Syntax
 

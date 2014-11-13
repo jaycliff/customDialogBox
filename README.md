@@ -1,12 +1,12 @@
 customDialogueBox
 ===============
 
-Custom-made asynchronous dialogue boxes for **modern browsers**.
+Custom-made, pseudo-synchronous dialogue boxes for **modern browsers**.
 Basically, this is a replacement for the browser's built-in dialogue boxes (**alert**, **confirm**, and **prompt**).
 
 ## Notes
 
-This requires the jQuery library and the classList shim.
+This requires the **jQuery** library and the **classList** shim.
 
 ## customDialogueBox.alert()
 
@@ -71,7 +71,7 @@ customDialogueBox.confirm('This is a confirm dialogue box with no title.', funct
    * **message** is an optional string of text that you want to display in the dialogue box's body.
    * **default_value** is an optional value that will serve as the input box's default value.
    * **title** is an optional string of text that will serve as the dialogue box's title.
-   * **callback** is an optional callback function that runs upon clicking of the **Ok** button. A single argument (which will either be the text entered in the input box, or the value *null*) will be passed in the function.
+   * **callback** is an optional callback function that runs upon clicking of the **Ok** button. A single argument (which will either be the text entered in the input box, or the value **null**) will be passed in the function.
 
 ### Example Usage
 

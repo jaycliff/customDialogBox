@@ -8,8 +8,13 @@ Basically, this is a replacement for the browser's built-in dialogue boxes (aler
 
 This requires the jQuery library and the classList shim.
 
+## Notes
+
+This requires the classList shim.
+
 ## customDialogueBox.alert
 
+<<<<<<< HEAD
 ### Syntax
 
 `customDialogueBox.alert(message, title, callback]);`
@@ -20,12 +25,15 @@ This requires the jQuery library and the classList shim.
 
 ### Example Usage
 
+=======
+>>>>>>> origin/master
 ```javascript
 customDialogueBox.alert('This is an alert dialogue box', 'Alert');
 ```
 
 ## customDialogueBox.confirm
 
+<<<<<<< HEAD
 ### Syntax
 
 `customDialogueBox.confirm(message, title, callback]);`
@@ -43,11 +51,21 @@ customDialogueBox.confirm('This is a confirm dialogue box', 'Confirm', function 
     } else {
         console.log('You clicked "No".');
     }
+=======
+```javascript
+customDialogueBox.confirm('This is a confirm dialogue box', 'Confirm', function (value) {
+    // Outputs the boolean 'true';
+    console.log(value);
+}, function (value) {
+    // Outputs the boolean 'false';
+    console.log(value);
+>>>>>>> origin/master
 });
 ```
 
 ## customDialogueBox.prompt
 
+<<<<<<< HEAD
 ### Syntax
 
 `customDialogueBox.confirm(message, default_value, title, callback]);`
@@ -68,3 +86,14 @@ customDialogueBox.prompt('This is a prompt dialogue box', 'Prompt', function (va
     }
 });
 ```
+=======
+```javascript
+customDialogueBox.prompt('This is a prompt dialogue box', 'Prompt', function (value) {
+    // Outputs whatever you wrote on the prompt's input textbox;
+    console.log(value);
+}, function (value) {
+    // Outputs the primitive 'null'
+    console.log(value);
+});
+```
+>>>>>>> origin/master

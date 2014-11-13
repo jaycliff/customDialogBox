@@ -12,7 +12,7 @@ This requires the **jQuery** library and the **classList** shim.
 
 ### Syntax
 
-`customDialogueBox.alert(message, title, callback);`
+`customDialogueBox.alert(message, title).then(callback);`
 
    * **message** is an optional string of text (or alternatively, an object that is always converted into a string) that you want to display in the dialogue box's body.
    * **title** is an optional string of text that will serve as the dialogue box's title.
@@ -25,7 +25,7 @@ customDialogueBox.alert('This is an alert dialogue box', 'Alert');
 ```
 
 ```javascript
-customDialogueBox.alert('This is an alert dialogue box with no title, but has an optional callback', function () {
+customDialogueBox.alert('This is an alert dialogue box with no title, but has an optional callback').then(function () {
     console.log('Alert callback');
 });
 ```
@@ -34,7 +34,7 @@ customDialogueBox.alert('This is an alert dialogue box with no title, but has an
 
 ### Syntax
 
-`customDialogueBox.confirm(message, title, callback);`
+`customDialogueBox.confirm(message, title).then(callback);`
 
    * **message** is an optional string of text that you want to display in the dialogue box's body.
    * **title** is an optional string of text that will serve as the dialogue box's title.
@@ -43,7 +43,7 @@ customDialogueBox.alert('This is an alert dialogue box with no title, but has an
 ### Example Usage
 
 ```javascript
-customDialogueBox.confirm('This is a confirm dialogue box', 'Confirm', function (value) {
+customDialogueBox.confirm('This is a confirm dialogue box', 'Confirm').then(function (value) {
     if (value) {
         console.log('You clicked "Yes".');
     } else {
@@ -53,7 +53,7 @@ customDialogueBox.confirm('This is a confirm dialogue box', 'Confirm', function 
 ```
 
 ```javascript
-customDialogueBox.confirm('This is a confirm dialogue box with no title.', function (value) {
+customDialogueBox.confirm('This is a confirm dialogue box with no title.').then(function (value) {
     if (value) {
         console.log('You clicked "Yes".');
     } else {
@@ -66,7 +66,7 @@ customDialogueBox.confirm('This is a confirm dialogue box with no title.', funct
 
 ### Syntax
 
-`customDialogueBox.confirm(message, default_value, title, callback);`
+`customDialogueBox.confirm(message, default_value, title).then(callback);`
 
    * **message** is an optional string of text that you want to display in the dialogue box's body.
    * **default_value** is an optional value that will serve as the input box's default value.
@@ -76,7 +76,7 @@ customDialogueBox.confirm('This is a confirm dialogue box with no title.', funct
 ### Example Usage
 
 ```javascript
-customDialogueBox.prompt('This is a prompt dialogue box with no title, but has a default value "nerd"', 'nerd', function (value) {
+customDialogueBox.prompt('This is a prompt dialogue box with no title, but has a default value "nerd"', 'nerd').then(function (value) {
     if (value !== null) {
         alert('Hello ' + value);
     } else {
@@ -86,7 +86,7 @@ customDialogueBox.prompt('This is a prompt dialogue box with no title, but has a
 ```
 
 ```javascript
-customDialogueBox.prompt('This is a prompt dialogue box with no default value, but has a title.', '', 'Prompt', function (value) {
+customDialogueBox.prompt('This is a prompt dialogue box with no default value, but has a title.', '', 'Prompt').then(function (value) {
     if (value !== null) {
         alert('Hello ' + value);
     } else {

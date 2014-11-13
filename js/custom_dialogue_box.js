@@ -110,6 +110,7 @@ if (!String.prototype.trim) {
                     $ok = $(ok),
                     $cancel = $(cancel),
                     button_active_class = 'on',
+                    dialogueBoxCommonality,
                     positionDialog = function () {
                         $cdb.css('left', (Math.floor($document.outerWidth() / 2) - Math.floor($cdb.outerWidth() / 2)) + 'px');
                         $cdb.css('margin-top', (-Math.floor($cdb.outerHeight() / 2)) + 'px');
@@ -335,7 +336,9 @@ if (!String.prototype.trim) {
                 $ok.data('$this', $ok);
                 $cancel.data('$this', $cancel);
                 entry_object_pool = (function () {
-                    var pool = [];
+                    var pool = [], then = function (callback) {
+                        this.callback = callback;
+                    };
                     function createObject() {
                         if (typeof Object.create === "function") {
                             return Object.create(null);
@@ -344,10 +347,14 @@ if (!String.prototype.trim) {
                     }
                     return {
                         'summon': function () {
+                            var obj;
                             if (pool.length > 0) {
-                                return pool.pop();
+                                obj = pool.pop();
+                            } else {
+                                obj = createObject();
                             }
-                            return createObject();
+                            obj.then = then;
+                            return obj;
                         },
                         'banish': function (entry) {
                             var key;
@@ -377,59 +384,53 @@ if (!String.prototype.trim) {
                     }
                     return string;
                 }
-                function dialogueBoxCommonality(type, a, b, c, d) {
-                    var entry = entry_object_pool.summon();
-                    entry.type = type;
-                    // The browser's built-in dialogue boxes always coerces the first argument into a string, that's why we're doing the same.
-                    entry.message = stringify(a);
-                    switch (type) {
-                    case 'prompt':
-                        if (typeof b === "function") {
-                            entry.default_value = '';
-                            entry.title = '';
-                            entry.callback = b;
-                        } else {
-                            entry.default_value = (stringify(b)).trim();
-                            if (typeof c === "function") {
-                                entry.title = '';
-                                entry.callback = c;
-                            } else {
-                                entry.title = stringify(c);
-                                entry.callback = d;
-                            }
-                        }
-                        break;
-                    default:
-                        if (typeof b === "function") {
-                            entry.title = '';
-                            entry.callback = b;
-                        } else {
+                (function () {
+                    var then_carrier = {
+                            then: function (callback) { entry.callback = callback; }
+                        },
+                        entry,
+                        forNextCycle = function () {
+                            $overlay.stop().fadeIn(fade_speed);
+                            displayEntry();
+                        };
+                    if (Object.freeze) {
+                        Object.freeze(then_carrier);
+                    }
+                    dialogueBoxCommonality = function (type, a, b, c, d) {
+                        entry = entry_object_pool.summon();
+                        entry.type = type;
+                        entry.message = stringify(a);
+                        switch (type) {
+                        case 'prompt':
+                            entry.default_value = stringify(b);
+                            entry.title = stringify(c);
+                            break;
+                        default:
                             entry.title = stringify(b);
-                            entry.callback = c;
                         }
-                    }
-                    if (callback_priority) {
-                        list_of_prioritized_entries.push(entry);
-                    } else {
-                        list_of_entries.push(entry);
-                    }
-                    if (!active) {
-                        active = true;
-                        last_focused_element = document.activeElement;
-                        $window.on('resize', positionDialog);
-                        $cdb.on('mousedown click', 'button, input', $cdb.data('event-allow-focus'));
-                        $prompt_input.on('keypress', $prompt_input.data('event-allow-typing'));
-                        $overlay.on('keydown', $overlay.data('event-controlled-keydown')).on('mousedown click keypress', $overlay.data('event-prevent-leak'));
-                        prompt_input.disabled = false;
-                        ok.disabled = false;
-                        cancel.disabled = false;
-                        $ok.on('click', clickHandler);
-                        $cancel.on('click', clickHandler);
-                        $close.on('click', clickHandler);
-                        $overlay.stop().fadeIn(fade_speed);
-                        displayEntry();
-                    }
-                }
+                        if (callback_priority) {
+                            list_of_prioritized_entries.push(entry);
+                        } else {
+                            list_of_entries.push(entry);
+                        }
+                        if (!active) {
+                            active = true;
+                            last_focused_element = document.activeElement;
+                            $window.on('resize', positionDialog);
+                            $cdb.on('mousedown click', 'button, input', $cdb.data('event-allow-focus'));
+                            $prompt_input.on('keypress', $prompt_input.data('event-allow-typing'));
+                            $overlay.on('keydown', $overlay.data('event-controlled-keydown')).on('mousedown click keypress', $overlay.data('event-prevent-leak'));
+                            prompt_input.disabled = false;
+                            ok.disabled = false;
+                            cancel.disabled = false;
+                            $ok.on('click', clickHandler);
+                            $cancel.on('click', clickHandler);
+                            $close.on('click', clickHandler);
+                            setTimeout(forNextCycle, 0);
+                        }
+                        return then_carrier;
+                    };
+                }());
                 return {
                     alert: function (a, b, c) {
                         // Start emulation on how the native 'alert' handles the undefined value

@@ -71,10 +71,12 @@ if (!String.prototype.trim) {
         var $alert = $('#alert'), $confirm = $('#confirm'), $prompt = $('#prompt');
         customDialogueBox.setOption('fadespeed', 100);
         $alert.on('click', function () {
-            customDialogueBox.alert('I know where you live...', 'Alert');
+            customDialogueBox.alert('I know where you live...', 'Alert').then(function () {
+                customDialogueBox.alert('...but I easily forget');
+            });
         });
         $confirm.on('click', function () {
-            customDialogueBox.confirm('Is Justin Beiber gay?', 'Confirm', function (value) {
+            customDialogueBox.confirm('Is Justin Beiber gay?', 'Confirm').then(function (value) {
                 if (value) {
                     customDialogueBox.alert('I knew it!', 'G-A-Y');
                 } else {
@@ -83,7 +85,7 @@ if (!String.prototype.trim) {
             });
         });
         $prompt.on('click', function () {
-            customDialogueBox.prompt('Enter your name', 'Jaycliff', 'Prompt', function (value) {
+            customDialogueBox.prompt('Enter your name', 'Jaycliff', 'Prompt').then(function (value) {
                 if (typeof value === "string") {
                     if (value.trim() === '') {
                         customDialogueBox.alert('You are a badass!');
@@ -91,7 +93,11 @@ if (!String.prototype.trim) {
                         customDialogueBox.alert(value.trim() + ', you are a badass!');
                     }
                 } else {
-                    customDialogueBox.alert('Okay, whatever floats your boat...');
+                    customDialogueBox.alert('Okay, whatever floats your boat...').then(function () {
+                        customDialogueBox.alert('...you little turd.').then(function () {
+                            customDialogueBox.alert('Just kidding :)');
+                        });
+                    });
                 }
             });
         });

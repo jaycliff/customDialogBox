@@ -385,10 +385,10 @@ if (!String.prototype.trim) {
                     return string;
                 }
                 (function () {
-                    var then_carrier = {
+                    var entry,
+                        then_carrier = {
                             then: function (callback) { entry.callback = callback; }
                         },
-                        entry,
                         forNextCycle = function () {
                             $overlay.stop().fadeIn(fade_speed);
                             displayEntry();

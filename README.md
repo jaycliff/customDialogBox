@@ -96,3 +96,22 @@ $.custom_dialogue_box.prompt('This is a prompt dialogue box with no default valu
     }
 });
 ```
+
+## Settings
+
+### Syntax
+
+`$.custom_dialogue_box.setOption(name_of_option, value)`
+
+   * **name_of_option** is the, uh, name of the option that you want to change.
+   * **value** is the appropriate, uh, value for **name_of_option**.
+   
+### Example Usage
+
+```javascript
+// Set the fade-in / fade-out speed to 1000 milliseconds.
+$.custom_dialogue_box.setOption('fade_speed', 1000);
+
+// Set the default title to an empty string (The default is "JavaScript <type of dialogue box>").
+$.custom_dialogue_box.setOption('default_title', '');
+```

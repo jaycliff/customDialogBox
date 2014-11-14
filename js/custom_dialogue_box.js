@@ -41,7 +41,7 @@ if (!String.prototype.trim) {
         return element.dispatchEvent(event_object);
     }
     $document.ready(function () {
-        var customDialogueBox, id = 'custom-dialogue-box';
+        var custom_dialogue_box, id = 'custom-dialogue-box', has_class_list = !!document.documentElement.classList;
         (function setupDialogMarkup() {
             var overlay = document.createElement('div'),
                 cdb = document.createElement('div'),
@@ -89,13 +89,15 @@ if (!String.prototype.trim) {
             cdb.appendChild(button_tray);
             overlay.appendChild(cdb);
             document.body.appendChild(overlay);
-            customDialogueBox = (function () {
+            custom_dialogue_box = (function () {
                 var active = false,
                     callback_priority = false,
                     last_focused_element,
                     entry_object_pool,
                     entry_type = '',
                     fade_speed = 80,
+                    default_title = 'JavaScript ',
+                    is_original_default_title = true,
                     callback,
                     list_of_entries = [],
                     // list_of_prioritized_entries is for the instances made inside the callbacks
@@ -119,7 +121,11 @@ if (!String.prototype.trim) {
                         var entry = list_of_entries.shift();
                         entry_type = entry.type;
                         callback = entry.callback;
-                        cdb.classList.add(entry_type);
+                        if (has_class_list) {
+                            cdb.classList.add(entry_type);
+                        } else {
+                            $cdb.addClass(entry_type);
+                        }
                         if (cdb.id !== id) {
                             cdb.setAttribute('id', id);
                         }
@@ -154,7 +160,11 @@ if (!String.prototype.trim) {
                         entry_object_pool.banish(entry);
                     },
                     resetDB = function () {
-                        cdb.classList.remove(entry_type);
+                        if (has_class_list) {
+                            cdb.classList.remove(entry_type);
+                        } else {
+                            $cdb.removeClass(entry_type);
+                        }
                         callback = undefined;
                         entry_type = '';
                         $message.text('');
@@ -217,12 +227,17 @@ if (!String.prototype.trim) {
                 };
                 (function () {
                     var sb_active = false, keyupHandler = function (event) {
-                        var active_element = document.activeElement;
+                        var active_element = document.activeElement, $active_element;
                         event.stopImmediatePropagation();
                         if (event.which === 32) {
                             if (active_element !== prompt_input) {
-                                $.data(active_element, '$this').trigger('click');
-                                active_element.classList.remove(button_active_class);
+                                $active_element = $.data(active_element, '$this');
+                                $active_element.trigger('click');
+                                if (has_class_list) {
+                                    active_element.classList.remove(button_active_class);
+                                } else {
+                                    $active_element.removeClass(button_active_class);
+                                }
                             }
                             sb_active = false;
                             $overlay.off('keyup', keyupHandler);
@@ -243,35 +258,59 @@ if (!String.prototype.trim) {
                                 switch (entry_type) {
                                 case 'confirm':
                                     if (sb_active) {
-                                        document.activeElement.classList.remove(button_active_class);
+                                        if (has_class_list) {
+                                            document.activeElement.classList.remove(button_active_class);
+                                        } else {
+                                            $.data(document.activeElement, '$this').removeClass(button_active_class);
+                                        }
                                     }
                                     if (document.activeElement === ok) {
                                         $cancel.trigger('focus');
                                         if (sb_active) {
-                                            cancel.classList.add(button_active_class);
+                                            if (has_class_list) {
+                                                cancel.classList.add(button_active_class);
+                                            } else {
+                                                $cancel.addClass(button_active_class);
+                                            }
                                         }
                                     } else {
                                         $ok.trigger('focus');
                                         if (sb_active) {
-                                            ok.classList.add(button_active_class);
+                                            if (has_class_list) {
+                                                ok.classList.add(button_active_class);
+                                            } else {
+                                                $ok.addClass(button_active_class);
+                                            }
                                         }
                                     }
                                     break;
                                 case 'prompt':
                                     if (sb_active && document.activeElement !== prompt_input) {
-                                        document.activeElement.classList.remove(button_active_class);
+                                        if (has_class_list) {
+                                            document.activeElement.classList.remove(button_active_class);
+                                        } else {
+                                            $.data(document.activeElement, '$this').removeClass(button_active_class);
+                                        }
                                     }
                                     switch (document.activeElement) {
                                     case prompt_input:
                                         $ok.trigger('focus');
                                         if (sb_active) {
-                                            ok.classList.add(button_active_class);
+                                            if (has_class_list) {
+                                                ok.classList.add(button_active_class);
+                                            } else {
+                                                $ok.addClass(button_active_class);
+                                            }
                                         }
                                         break;
                                     case ok:
                                         $cancel.trigger('focus');
                                         if (sb_active) {
-                                            cancel.classList.add(button_active_class);
+                                            if (has_class_list) {
+                                                cancel.classList.add(button_active_class);
+                                            } else {
+                                                $cancel.addClass(button_active_class);
+                                            }
                                         }
                                         break;
                                     case cancel:
@@ -306,7 +345,11 @@ if (!String.prototype.trim) {
                             if (!sb_active && (document.activeElement === ok || document.activeElement === cancel)) {
                                 event.preventDefault();
                                 sb_active = true;
-                                document.activeElement.classList.add(button_active_class);
+                                if (has_class_list) {
+                                    document.activeElement.classList.add(button_active_class);
+                                } else {
+                                    $.data(document.activeElement, '$this').addClass(button_active_class);
+                                }
                                 $overlay.on('keyup', keyupHandler);
                             }
                             break;
@@ -332,9 +375,11 @@ if (!String.prototype.trim) {
                     event.stopImmediatePropagation();
                     //$overlay.focus();
                 });
-                $prompt_input.data('$self', $prompt_input);
+                $overlay.data('$this', $overlay);
+                $prompt_input.data('$this', $prompt_input);
                 $ok.data('$this', $ok);
                 $cancel.data('$this', $cancel);
+                $close.data('$this', $close);
                 entry_object_pool = (function () {
                     var pool = [];
                     function createObject() {
@@ -390,6 +435,9 @@ if (!String.prototype.trim) {
                     if (Object.freeze) {
                         Object.freeze(then_carrier);
                     }
+                    function capitaliseFirstLetter(string) {
+                        return string.charAt(0).toUpperCase() + string.slice(1);
+                    }
                     createDialogueBoxEntry = function (type, a, b, c) {
                         entry = entry_object_pool.summon();
                         entry.type = type;
@@ -397,10 +445,10 @@ if (!String.prototype.trim) {
                         switch (type) {
                         case 'prompt':
                             entry.default_value = stringify(b);
-                            entry.title = stringify(c);
+                            entry.title = (c === undefined) ? (is_original_default_title ? default_title + capitaliseFirstLetter(type) : default_title) : stringify(c);
                             break;
                         default:
-                            entry.title = stringify(b);
+                            entry.title = (b === undefined) ? (is_original_default_title ? default_title + capitaliseFirstLetter(type) : default_title) : stringify(b);
                         }
                         if (callback_priority) {
                             list_of_prioritized_entries.push(entry);
@@ -431,9 +479,6 @@ if (!String.prototype.trim) {
                         if (a === undefined) {
                             a = stringify(a, (arguments.length > 0));
                         }
-                        if (b === undefined) {
-                            b = stringify(b, (arguments.length > 1));
-                        }
                         // End emulation on how the native 'alert' handles the undefined value
                         return createDialogueBoxEntry('alert', a, b);
                     },
@@ -445,38 +490,60 @@ if (!String.prototype.trim) {
                     },
                     setOption: function (option_name, value) {
                         switch (option_name.toLowerCase()) {
-                        case 'fadespeed':
+                        case 'fade_speed':
                             fade_speed = value;
                             break;
+                        case 'default_title':
+                            default_title = value;
+                            if (is_original_default_title) {
+                                is_original_default_title = false;
+                            }
+                            break;
+                        case 'restore_defaults':
+                            if (value) {
+                                fade_speed = 80;
+                                default_title = 'JavaScript ';
+                                is_original_default_title = true;
+                            }
+                            break;
                         default:
-                            customDialogueBox.alert('Invalid option name "' + option_name + '"', 'Set Option');
+                            custom_dialogue_box.alert('Invalid option name "' + option_name + '"', 'Set Option Error');
                         }
                     }
                 };
             }());
+            // Start random easter egg
             (function () {
                 var key, toStringer = function (key) {
                     return function () {
                         return 'function ' + key + '() { [imagi-native code] }';
                     };
                 };
-                for (key in customDialogueBox) {
-                    if (Object.prototype.hasOwnProperty.call(customDialogueBox, key)) {
-                        customDialogueBox[key].toString = toStringer(key);
+                for (key in custom_dialogue_box) {
+                    if (Object.prototype.hasOwnProperty.call(custom_dialogue_box, key)) {
+                        custom_dialogue_box[key].toString = toStringer(key);
                     }
                 }
                 key = null;
             }());
+            // End random easter egg
         }());
         if (typeof Object.defineProperty === "function") {
-            Object.defineProperty(global, 'customDialogueBox', {
-                enumerable: false,
+            Object.defineProperty(global, 'custom_dialogue_box', {
+                enumerable: true,
                 configurable: false,
                 writable: false,
-                value: customDialogueBox
+                value: custom_dialogue_box
+            });
+            Object.defineProperty($, 'custom_dialogue_box', {
+                enumerable: true,
+                configurable: false,
+                writable: false,
+                value: custom_dialogue_box
             });
         } else {
-            global.customDialogueBox = customDialogueBox;
+            global.custom_dialogue_box = custom_dialogue_box;
+            $.custom_dialogue_box = custom_dialogue_box;
         }
     });
 }(window, jQuery));

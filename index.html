@@ -2,7 +2,7 @@
 <html>
     <head>
         <meta charset="utf-8" />
-        <title>customDialogueBox by Jaycliff Arcilla</title>
+        <title>custom_dialogue_box by Jaycliff Arcilla</title>
         <!-- Check these out: http://iconmart.in/ and http://fontello.com/ -->
         <link rel="stylesheet" type="text/css" href="css/custom_dialogue_box.css" />
         <style type="text/css">
@@ -75,33 +75,33 @@ if (!String.prototype.trim) {
     var $document = $(document);
     $document.ready(function () {
         var $alert = $('#alert'), $confirm = $('#confirm'), $prompt = $('#prompt');
-        customDialogueBox.setOption('fadespeed', 100);
+        $.custom_dialogue_box.setOption('fade_speed', 100);
         $alert.on('click', function () {
-            customDialogueBox.alert('I know where you live...', 'Alert').then(function () {
-                customDialogueBox.alert('...but I easily forget.', 'Alert?');
+            $.custom_dialogue_box.alert('I know where you live...', 'Alert').then(function () {
+                $.custom_dialogue_box.alert('...but I easily forget.', 'Alert?');
             });
         });
         $confirm.on('click', function () {
-            customDialogueBox.confirm('Is Justin Beiber gay?', 'Confirm').then(function (value) {
+            $.custom_dialogue_box.confirm('Is Justin Beiber gay?', 'Confirm').then(function (value) {
                 if (value) {
-                    customDialogueBox.alert('I knew it!', 'Confirmed!');
+                    $.custom_dialogue_box.alert('I knew it!', 'Confirmed!');
                 } else {
-                    customDialogueBox.alert('Okay, so he must be bisexual huh?', 'Somewhere In The Middle...');
+                    $.custom_dialogue_box.alert('Okay, so he must be bisexual huh?', 'Somewhere In The Middle...');
                 }
             });
         });
         $prompt.on('click', function () {
-            customDialogueBox.prompt('Enter your name', 'Jaycliff', 'Prompt').then(function (value) {
+            $.custom_dialogue_box.prompt('Enter your name', 'Jaycliff', 'Prompt').then(function (value) {
                 if (typeof value === "string") {
                     if (value.trim() === '') {
-                        customDialogueBox.alert('You are a badass!');
+                        $.custom_dialogue_box.alert('You are a badass!');
                     } else {
-                        customDialogueBox.alert(value.trim() + ', you are a badass!', 'Oh Yeah!');
+                        $.custom_dialogue_box.alert(value.trim() + ', you are a badass!', 'Oh Yeah!');
                     }
                 } else {
-                    customDialogueBox.alert('Okay, whatever floats your boat...', 'Kill Joy...').then(function () {
-                        customDialogueBox.alert('...but your boat is leaking water.', 'Hmmm...').then(function () {
-                            customDialogueBox.alert('...and your job is to point it in the right direction. :)', '*Gulp*');
+                    $.custom_dialogue_box.alert('Okay, whatever floats your boat...', 'Kill Joy...').then(function () {
+                        $.custom_dialogue_box.alert('...but your boat is leaking water.', 'Hmmm...').then(function () {
+                            $.custom_dialogue_box.alert('...and your job is to point it in the right direction. :)', '*Gulp*');
                         });
                     });
                 }
@@ -113,7 +113,7 @@ if (!String.prototype.trim) {
     </head>
     <body>
         <!-- Template by Jaycliff Arcilla -->
-        <h1>customDialogueBoxes</h1>
+        <h1>custom_dialogue_box</h1>
         <h2>by Jaycliff Arcilla</h2>
         <div id="dialogue-boxes">
             <button id="alert">Alert</button>

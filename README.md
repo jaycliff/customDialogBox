@@ -4,13 +4,13 @@ custom_dialogue_box
 Custom-made, pseudo-synchronous dialogue boxes for **modern browsers**.
 Basically, this is a replacement for the browser's built-in dialogue boxes (**alert**, **confirm**, and **prompt**).
 
-Since these dialogue boxes are really asynchronous in nature (it can't return a value directly nor freeze the program execution unlike the browser's dialogue boxes), callbacks are utilized.
+Since these dialogue boxes are really asynchronous in nature (it can neither return a value directly nor freeze the program execution (which the browser's dialogue boxes does).), callbacks are utilized.
 
 ## Notes
 
 This requires the **jQuery** library.
 
-## $.custom_dialogue_box.alert()
+## Alert Dialogue Box
 
 ### Syntax
 
@@ -32,7 +32,7 @@ $.custom_dialogue_box.alert('This is an alert dialogue box with no title, but ha
 });
 ```
 
-## $.custom_dialogue_box.confirm()
+## Confirm Dialogue Box
 
 ### Syntax
 
@@ -64,7 +64,7 @@ $.custom_dialogue_box.confirm('This is a confirm dialogue box with no title.').t
 });
 ```
 
-## $.custom_dialogue_box.prompt()
+## Prompt Dialogue Box
 
 ### Syntax
 

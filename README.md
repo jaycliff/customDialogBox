@@ -23,11 +23,11 @@ This requires the **jQuery** library.
 ### Example Usage
 
 ```javascript
-$.custom_dialogue_box.alert('This is an alert dialogue box', 'Alert');
+$.custom_dialogue_box.alert('This is an alert dialogue box with a custom title "Alert"', 'Alert');
 ```
 
 ```javascript
-$.custom_dialogue_box.alert('This is an alert dialogue box with no title, but has an optional callback').then(function () {
+$.custom_dialogue_box.alert('This is an alert dialogue box with the default title "JavaScript Alert", and an optional callback').then(function () {
     console.log('Alert callback');
 });
 ```
@@ -45,7 +45,7 @@ $.custom_dialogue_box.alert('This is an alert dialogue box with no title, but ha
 ### Example Usage
 
 ```javascript
-$.custom_dialogue_box.confirm('This is a confirm dialogue box', 'Confirm').then(function (value) {
+$.custom_dialogue_box.confirm('This is a confirm dialogue box with a custom title "Confirm"', 'Confirm').then(function (value) {
     if (value) {
         console.log('You clicked "Yes".');
     } else {
@@ -55,7 +55,7 @@ $.custom_dialogue_box.confirm('This is a confirm dialogue box', 'Confirm').then(
 ```
 
 ```javascript
-$.custom_dialogue_box.confirm('This is a confirm dialogue box with no title.').then(function (value) {
+$.custom_dialogue_box.confirm('This is a confirm dialogue box with the default title "JavaScript Confirm".').then(function (value) {
     if (value) {
         console.log('You clicked "Yes".');
     } else {
@@ -78,7 +78,7 @@ $.custom_dialogue_box.confirm('This is a confirm dialogue box with no title.').t
 ### Example Usage
 
 ```javascript
-$.custom_dialogue_box.prompt('This is a prompt dialogue box with no title, but has a default value "nerd"', 'nerd').then(function (value) {
+$.custom_dialogue_box.prompt('This is a prompt dialogue box with the default title "JavaScript Prompt", and a default value "nerd"', 'nerd').then(function (value) {
     if (value !== null) {
         alert('Hello ' + value);
     } else {
@@ -88,7 +88,7 @@ $.custom_dialogue_box.prompt('This is a prompt dialogue box with no title, but h
 ```
 
 ```javascript
-$.custom_dialogue_box.prompt('This is a prompt dialogue box with no default value, but has a title.', '', 'Prompt').then(function (value) {
+$.custom_dialogue_box.prompt('This is a prompt dialogue box with no default value, but has a custom title "Prompt".', '', 'Prompt').then(function (value) {
     if (value !== null) {
         alert('Hello ' + value);
     } else {

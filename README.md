@@ -27,7 +27,7 @@ $.custom_dialogue_box.alert('This is an alert dialogue box with a custom title "
 ```
 
 ```javascript
-$.custom_dialogue_box.alert('This is an alert dialogue box with the default title "JavaScript Alert", and an optional callback').then(function () {
+$.custom_dialogue_box.alert('This is an alert dialogue box with the default title "JavaScript Alert", and an optional callback.').then(function () {
     console.log('Alert callback');
 });
 ```

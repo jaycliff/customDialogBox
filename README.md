@@ -23,7 +23,7 @@ This requires the **jQuery** library.
 ### Example Usage
 
 ```javascript
-$.custom_dialogue_box.alert('This is an alert dialogue box with a custom title "Alert"', 'Alert');
+$.custom_dialogue_box.alert('This is an alert dialogue box with a custom title "Alert".', 'Alert');
 ```
 
 ```javascript
@@ -45,7 +45,7 @@ $.custom_dialogue_box.alert('This is an alert dialogue box with the default titl
 ### Example Usage
 
 ```javascript
-$.custom_dialogue_box.confirm('This is a confirm dialogue box with a custom title "Confirm"', 'Confirm').then(function (value) {
+$.custom_dialogue_box.confirm('This is a confirm dialogue box with a custom title "Confirm".', 'Confirm').then(function (value) {
     if (value) {
         console.log('You clicked "Yes".');
     } else {
@@ -78,7 +78,7 @@ $.custom_dialogue_box.confirm('This is a confirm dialogue box with the default t
 ### Example Usage
 
 ```javascript
-$.custom_dialogue_box.prompt('This is a prompt dialogue box with the default title "JavaScript Prompt", and a default value "nerd"', 'nerd').then(function (value) {
+$.custom_dialogue_box.prompt('This is a prompt dialogue box with the default title "JavaScript Prompt", and a default value "nerd".', 'nerd').then(function (value) {
     if (value !== null) {
         alert('Hello ' + value);
     } else {

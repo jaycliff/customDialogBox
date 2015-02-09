@@ -1,5 +1,5 @@
 /*
-    Copyright 2014 Jaycliff Arcilla of Eversun Software Philippines Corporation (Davao Branch)
+    Copyright 2014-2015 Jaycliff Arcilla of Eversun Software Philippines Corporation (Davao Branch)
     
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
@@ -546,4 +546,4 @@ if (!String.prototype.trim) {
             $.custom_dialogue_box = custom_dialogue_box;
         }
     });
-}(window, jQuery));
+}(window, window.jQuery || (window.module && window.module.exports)));

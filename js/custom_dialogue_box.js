@@ -431,6 +431,7 @@ if (!String.prototype.trim) {
                             andThen: thenner,
                             thenDo: thenner,
                             callback: thenner,
+                            call: thenner,
                             next: thenner
                         },
                         forNextCycle = function () {

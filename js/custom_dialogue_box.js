@@ -425,8 +425,13 @@ if (!String.prototype.trim) {
                 }
                 (function () {
                     var entry,
+                        thenner = function (callback) { entry.callback = callback; },
                         then_carrier = {
-                            then: function (callback) { entry.callback = callback; }
+                            then: thenner,
+                            andThen: thenner,
+                            thenDo: thenner,
+                            callback: thenner,
+                            next: thenner
                         },
                         forNextCycle = function () {
                             $overlay.stop().fadeIn(fade_speed);

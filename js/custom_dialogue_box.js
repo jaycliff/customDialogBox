@@ -111,6 +111,7 @@ if (!String.prototype.trim) {
                     $prompt_input = $(prompt_input),
                     $ok = $(ok),
                     $cancel = $(cancel),
+                    $the_buttons = $ok.add($cancel),
                     button_active_class = 'on',
                     createDialogueBoxEntry,
                     positionDialog = function () {
@@ -192,6 +193,13 @@ if (!String.prototype.trim) {
                             $overlay.stop().fadeOut(fade_speed, resetDB);
                         }
                     };
+                $prompt_input.on('mousedown touchstart', function () {
+                    if (has_class_list) {
+                        document.activeElement.classList.remove(button_active_class);
+                    } else {
+                        $.data(document.activeElement, '$this').removeClass(button_active_class);
+                    }
+                });
                 clickHandler = function () {
                     callback_priority = true;
                     switch (entry_type) {
@@ -243,6 +251,25 @@ if (!String.prototype.trim) {
                             $overlay.off('keyup', keyupHandler);
                         }
                     };
+                    $the_buttons.on('focus', function () {
+                        var other;
+                        if (document.activeElement === ok) {
+                            other = cancel;
+                        } else {
+                            other = ok;
+                        }
+                        if (has_class_list) {
+                            if (sb_active) {
+                                this.classList.add(button_active_class);
+                            }
+                            other.classList.remove(button_active_class);
+                        } else {
+                            if (sb_active) {
+                                $.data(this, '$this').addClass(button_active_class);
+                            }
+                            $.data(other, '$this').removeClass(button_active_class);
+                        }
+                    });
                     $overlay.data('event-controlled-keydown', function (event) {
                         event.stopImmediatePropagation();
                         switch (event.which) {
@@ -473,6 +500,14 @@ if (!String.prototype.trim) {
                             cancel.disabled = false;
                             $ok.on('click', clickHandler);
                             $cancel.on('click', clickHandler);
+                            // Just in case...
+                            if (has_class_list) {
+                                $ok[0].classList.remove(button_active_class);
+                                $cancel[0].classList.remove(button_active_class);
+                            } else {
+                                $ok.removeClass(button_active_class);
+                                $cancel.removeClass(button_active_class);
+                            }
                             $close.on('click', clickHandler);
                             setTimeout(forNextCycle, 0);
                         }

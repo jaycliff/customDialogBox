@@ -123,6 +123,7 @@
     cursor: pointer;
 }
 
+#custom-dialogue-box > .close > .close-icon.on,
 #custom-dialogue-box > .close > .close-icon:active {
     color: #202020;
 }

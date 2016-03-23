@@ -1,5 +1,5 @@
 /*
-    Copyright 2014-2015 Jaycliff Arcilla of Eversun Software Philippines Corporation (Davao Branch)
+    Copyright 2016 Jaycliff Arcilla of Eversun Software Philippines Corporation (Davao Branch)
     
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
@@ -111,6 +111,19 @@ if (!String.prototype.trim) {
                     $prompt_input = $(prompt_input),
                     $ok = $(ok),
                     $cancel = $(cancel),
+                    list_of_touched_clickables = {},
+                    overlayTouchUpHandler = function (event) {
+                        var $active_element = $.data(list_of_touched_clickables[event.which], '$self');
+                        if ($active_element) {
+                            $active_element.removeClass('on');
+                        }
+                        $overlay.off('custom:touchup', overlayTouchUpHandler);
+                    },
+                    $click_catchers = $cdb.find('button, input, div.close').on('custom:touchdown', function (event) {
+                        list_of_touched_clickables[event.which] = this;
+                        $overlay.on('custom:touchup', overlayTouchUpHandler);
+                        $.data(this, '$self').addClass('on').trigger('focus');
+                    }),
                     $the_buttons = $ok.add($cancel),
                     button_active_class = 'on',
                     createDialogueBoxEntry,
@@ -160,7 +173,7 @@ if (!String.prototype.trim) {
                         positionDialog();
                         entry_object_pool.banish(entry);
                     },
-                    resetDB = function () {
+                    resetDialogueBox = function () {
                         if (has_class_list) {
                             cdb.classList.remove(entry_type);
                         } else {
@@ -175,7 +188,7 @@ if (!String.prototype.trim) {
                     clickHandler,
                     confirmation = function () {
                         if (list_of_entries.length > 0) {
-                            resetDB();
+                            resetDialogueBox();
                             displayEntry();
                         } else {
                             active = false;
@@ -186,11 +199,11 @@ if (!String.prototype.trim) {
                             $cdb.off('mousedown click', 'button, input', $cdb.data('event-allow-focus'));
                             $prompt_input.off('keypress', $prompt_input.data('event-allow-typing'));
                             $overlay.off('keydown', $overlay.data('event-controlled-keydown')).off('mousedown click keypress', $overlay.data('event-prevent-leak'));
-                            $ok.off('click', clickHandler);
-                            $cancel.off('click', clickHandler);
-                            $close.off('click', clickHandler);
+                            $ok.off('click custom:tap', clickHandler);
+                            $cancel.off('click custom:tap', clickHandler);
+                            $close.off('click custom:tap', clickHandler);
                             eventFire(last_focused_element, 'focus');
-                            $overlay.stop().fadeOut(fade_speed, resetDB);
+                            $overlay.stop().fadeOut(fade_speed, resetDialogueBox);
                         }
                     };
                 $prompt_input.on('mousedown touchstart', function () {
@@ -200,6 +213,9 @@ if (!String.prototype.trim) {
                         $.data(document.activeElement, '$this').removeClass(button_active_class);
                     }
                 });
+                $ok.data('$self', $ok);
+                $cancel.data('$self', $cancel);
+                $close.data('$self', $close);
                 clickHandler = function () {
                     callback_priority = true;
                     switch (entry_type) {

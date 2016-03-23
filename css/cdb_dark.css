@@ -49,6 +49,7 @@
     color: #a0a0a0;
 }
 
+#custom-dialogue-box > .close > .close-icon.on,
 #custom-dialogue-box > .close > .close-icon:active {
     background-color: #404040;
     border-color: #404040;

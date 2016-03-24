@@ -216,45 +216,12 @@ if (!String.prototype.trim) {
                 $ok.data('$self', $ok);
                 $cancel.data('$self', $cancel);
                 $close.data('$self', $close);
-                clickHandler = function () {
-                    callback_priority = true;
-                    switch (entry_type) {
-                    case 'confirm':
-                        if (typeof callback === "function") {
-                            if ($.data(this, 'yes')) {
-                                callback(true);
-                            } else {
-                                callback(false);
-                            }
-                        }
-                        break;
-                    case 'prompt':
-                        if (typeof callback === "function") {
-                            if ($.data(this, 'yes')) {
-                                callback($prompt_input.val());
-                            } else {
-                                callback(null);
-                            }
-                        }
-                        break;
-                    default:
-                        // This is for alert
-                        if (typeof callback === "function") {
-                            callback();
-                        }
-                    }
-                    callback_priority = false;
-                    while (list_of_prioritized_entries.length > 0) {
-                        list_of_entries.unshift(list_of_prioritized_entries.pop());
-                    }
-                    confirmation();
-                };
                 (function () {
                     var sb_active = false, keyupHandler = function (event) {
                         var active_element = document.activeElement, $active_element;
                         event.stopImmediatePropagation();
                         if (event.which === 32) {
-                            if (active_element !== prompt_input) {
+                            if (active_element !== prompt_input) { // If the active element is either ok or cancel...
                                 $active_element = $.data(active_element, '$this');
                                 $active_element.trigger('click');
                                 if (has_class_list) {
@@ -266,6 +233,43 @@ if (!String.prototype.trim) {
                             sb_active = false;
                             $overlay.off('keyup', keyupHandler);
                         }
+                    };
+                    clickHandler = function () {
+                        callback_priority = true;
+                        if (sb_active) {
+                            sb_active = false;
+                            $overlay.off('keyup', keyupHandler);
+                        }
+                        switch (entry_type) {
+                        case 'confirm':
+                            if (typeof callback === "function") {
+                                if ($.data(this, 'yes')) {
+                                    callback(true);
+                                } else {
+                                    callback(false);
+                                }
+                            }
+                            break;
+                        case 'prompt':
+                            if (typeof callback === "function") {
+                                if ($.data(this, 'yes')) {
+                                    callback($prompt_input.val());
+                                } else {
+                                    callback(null);
+                                }
+                            }
+                            break;
+                        default:
+                            // This is for alert
+                            if (typeof callback === "function") {
+                                callback();
+                            }
+                        }
+                        callback_priority = false;
+                        while (list_of_prioritized_entries.length > 0) {
+                            list_of_entries.unshift(list_of_prioritized_entries.pop());
+                        }
+                        confirmation();
                     };
                     $the_buttons.on('focus', function () {
                         var other;

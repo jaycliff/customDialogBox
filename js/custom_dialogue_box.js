@@ -234,6 +234,22 @@ if (!String.prototype.trim) {
                             $overlay.off('keyup', keyupHandler);
                         }
                     };
+                    $window.on('blur', function () {
+                        var active_element = document.activeElement, $active_element;
+                        if (sb_active) {
+                            sb_active = false;
+                            if (active_element && (active_element !== prompt)) {
+                                $active_element = $.data(active_element, '$this');
+                                if (has_class_list) {
+                                    active_element.classList.remove(button_active_class);
+                                } else {
+                                    $active_element.removeClass(button_active_class);
+                                }
+                                $active_element.trigger('blur');
+                            }
+                            $overlay.off('keyup', keyupHandler);
+                        }
+                    });
                     clickHandler = function () {
                         callback_priority = true;
                         if (sb_active) {

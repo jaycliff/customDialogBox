@@ -15,7 +15,7 @@
 */
 /*jslint browser: true, devel: true, nomen: false, unparam: false, sub: false, bitwise: false, forin: false */
 /*global $, jQuery*/
-if (!String.prototype.trim) {
+if (typeof String.prototype.trim !== "function") {
     (function (rtrim) {
         "use strict";
         String.prototype.trim = function () {
@@ -495,7 +495,8 @@ if (!String.prototype.trim) {
                             thenDo: thenner,
                             callback: thenner,
                             call: thenner,
-                            next: thenner
+                            next: thenner,
+                            so: thenner
                         },
                         forNextCycle = function () {
                             $overlay.stop().fadeIn(fade_speed);
@@ -623,4 +624,4 @@ if (!String.prototype.trim) {
             $.custom_dialogue_box = custom_dialogue_box;
         }
     });
-}(window, window.jQuery || (window.module && window.module.exports)));
+}(window, typeof jQuery === "function" && jQuery));

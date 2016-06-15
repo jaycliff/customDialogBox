@@ -14,7 +14,7 @@
     limitations under the License.
 */
 /*jslint browser: true, devel: true, nomen: false, unparam: false, sub: false, bitwise: false, forin: false */
-/*global $, jQuery*/
+/*global jQuery*/
 if (typeof String.prototype.trim !== "function") {
     (function (rtrim) {
         "use strict";
@@ -119,16 +119,13 @@ if (typeof String.prototype.trim !== "function") {
                         }
                         $overlay.off('custom:touchup', overlayTouchUpHandler);
                     },
-                    $click_catchers = $cdb.find('button, input, div.close').on('custom:touchdown', function (event) {
-                        list_of_touched_clickables[event.which] = this;
-                        $overlay.on('custom:touchup', overlayTouchUpHandler);
-                        $.data(this, '$self').addClass('on').trigger('focus');
-                    }),
+                    $click_catchers = $cdb.find('button, input, div.close'),
                     $the_buttons = $ok.add($cancel),
                     button_active_class = 'on',
                     createDialogueBoxEntry,
                     positionDialog = function () {
-                        $cdb.css('left', (Math.floor($document.outerWidth() / 2) - Math.floor($cdb.outerWidth() / 2)) + 'px');
+                        // We're using 'left' instead of 'margin-left' to properly align the cdb in small window widths, since the cdb doesn't have a fixed width (however, it does have a min-width)
+                        $cdb.css('left', (Math.floor($overlay.outerWidth() / 2) - Math.floor($cdb.outerWidth() / 2)) + 'px');
                         $cdb.css('margin-top', (-Math.floor($cdb.outerHeight() / 2)) + 'px');
                     },
                     displayEntry = function () {
@@ -179,6 +176,8 @@ if (typeof String.prototype.trim !== "function") {
                         } else {
                             $cdb.removeClass(entry_type);
                         }
+                        //$cdb.css('left', 'auto').css('margin-top', 0);
+                        $cdb.removeAttr('style');
                         callback = undefined;
                         entry_type = '';
                         $message.text('');
@@ -206,6 +205,11 @@ if (typeof String.prototype.trim !== "function") {
                             $overlay.stop().fadeOut(fade_speed, resetDialogueBox);
                         }
                     };
+                $click_catchers.on('custom:touchdown', function (event) {
+                    list_of_touched_clickables[event.which] = this;
+                    $overlay.on('custom:touchup', overlayTouchUpHandler);
+                    $.data(this, '$self').addClass('on').trigger('focus');
+                });
                 $prompt_input.on('mousedown touchstart', function () {
                     if (has_class_list) {
                         document.activeElement.classList.remove(button_active_class);

@@ -1,0 +1,218 @@
+@font-face {
+    font-family: 'close-icon';
+    src: url('../fonts/close-icon.eot?54178003');
+    src: url('../fonts/close-icon.eot?54178003#iefix') format('embedded-opentype'),
+        url('../fonts/close-icon.woff?54178003') format('woff'),
+        url('../fonts/close-icon.ttf?54178003') format('truetype'),
+        url('../fonts/close-icon.svg?54178003#close-icon') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+
+/* Chrome hack: SVG is rendered smoother in Windows. Uncomment if you need it. */
+/* Note that this will break hinting. In other OSes, the font will not be as sharp as it could. */
+
+/*
+@media screen and (-webkit-min-device-pixel-ratio:0) {
+    @font-face {
+        font-family: 'close-icon';
+        src: url('../fonts/close-icon.svg?54178003#close-icon') format('svg');
+    }
+}
+*/
+
+#custom-dialogue-box-overlay {
+    position: fixed;
+    background-color: rgba(0, 0, 0, 0.5);
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    display: none;
+    z-index: 999999;
+    user-select: none;
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    -o-user-select: none;
+}
+
+#custom-dialogue-box-overlay:before {
+    content: " ";
+    display: block;
+    height: 50%;
+}
+
+#custom-dialogue-box {
+    background-color: #fff9f5;
+    border: none;
+    /*
+    border: solid 1px rgba(0, 0, 0, 0.15);
+    border-top: solid 1px rgba(255, 255, 255, 0.15);
+    */
+    position: fixed;
+    margin: 0 auto;
+    min-width: 320px;
+    max-width: 640px;
+    width: auto;
+    font-size: 12px;
+    padding: 20px;
+    font-family: Arial;
+    border-radius: 0;
+    box-shadow: 0 0 0 10px rgba(0, 0, 0, 0.25), inset 0 0 15px rgba(0, 0, 0, 0.25);
+    left: auto;
+}
+
+#custom-dialogue-box > .content {
+    color: #202020;
+}
+
+#custom-dialogue-box > .content > .title {
+    font-size: 18px;
+    cursor: default;
+}
+
+#custom-dialogue-box > .close {
+    position: absolute;
+    right: 2px;
+    top: 2px;
+    width: 16px;
+    height: 16px;
+}
+
+#custom-dialogue-box > .close > .close-icon {
+    display: block;
+    width: 14px;
+    height: 14px;
+    line-height: 14px;
+    text-align: center;
+    padding: 0;
+    border-radius: 2px;
+    border: solid 1px rgba(0, 0, 0, 0.1);
+    color: #404040;
+    font-size: 12px;
+    background-color: rgba(0, 0, 0, 0.15);
+}
+
+#custom-dialogue-box > .close > .close-icon:before {
+    content: '\e801';
+    display: inline;
+    margin: 0;
+    padding: 0;
+    font-size: 13px;
+    font-family: 'close-icon';
+    font-style: normal;
+    font-weight: normal;
+    text-decoration: inherit;
+    text-align: center;
+    /* opacity: 0.8; */
+    
+    /* Specifies whether the content will be rendered aurally */
+    speak: none;
+    
+    /* For safety - reset parent styles, that can break glyph codes*/
+    font-variant: normal;
+    text-transform: none;
+    
+    /* You can be more comfortable with increased icons size */
+    /* font-size: 120%; */
+    
+    /* Uncomment for 3D effect */
+    /* text-shadow: 1px 1px 1px rgba(127, 127, 127, 0.3); */
+}
+
+#custom-dialogue-box > .close > .close-icon:hover {
+    color: #606060;
+    cursor: pointer;
+}
+
+#custom-dialogue-box > .close > .close-icon.on,
+#custom-dialogue-box > .close > .close-icon:active {
+    color: #202020;
+}
+
+#custom-dialogue-box > .content > .message {
+    padding: 10px 0;
+    margin: 10px auto;
+    white-space: pre-line;
+    cursor: default;
+    word-wrap: break-word;
+}
+
+#custom-dialogue-box > .content > .prompt-wrap > input {
+    display: block;
+    box-sizing: border-box;
+    padding: 2px;
+    border: solid 1px #c0c0c0;
+    border-radius: 2px;
+    width: 100%;
+}
+
+#custom-dialogue-box > .content > .prompt-wrap > input[disabled] {
+    opacity: 0.8;
+    border-color: transparent;
+    background-color: transparent;
+}
+
+#custom-dialogue-box > .button-tray {
+    margin-top: 20px;
+    text-align: right;
+    font-size: 0;
+}
+
+#custom-dialogue-box > .button-tray > button {
+    position: relative;
+    background-color: #f9f9f9;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
+    font-size: 13px;
+    padding: 4px 10px;
+    border: solid 1px #c0c0c0;
+    border-bottom: solid 1px #bcbcbc;
+    border-top: solid 1px #c4c4c4;
+    border-radius: 2px;
+    cursor: pointer;
+    min-width: 50px;
+}
+
+#custom-dialogue-box > .button-tray > button:hover {
+    background-color: #fcfcfc;
+}
+
+#custom-dialogue-box > .button-tray > button:before {
+    content: " ";
+    display: block;
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    box-shadow: inset 0 -1px 1px rgba(0, 0, 0, 0.1);
+}
+
+#custom-dialogue-box > .button-tray > button[disabled] {
+    visibility: hidden;
+}
+
+#custom-dialogue-box > .button-tray > button[disabled]:before {
+    box-shadow: none;
+}
+
+#custom-dialogue-box > .content > .prompt-wrap > input:focus, #custom-dialogue-box > .button-tray > button:focus {
+    outline: none;
+    box-shadow: inherit;
+    box-shadow: 0 0 1px 1px rgb(77, 144, 254);
+}
+
+#custom-dialogue-box > .button-tray > button:active, #custom-dialogue-box > .button-tray > button.on {
+    background-color: #e6e6e6;
+    /* border: 1px solid transparent; */
+    box-shadow: inset 0 0 3px rgba(0, 0, 0, 0.2);
+}
+
+#custom-dialogue-box > .button-tray > button:active:before, #custom-dialogue-box > .button-tray > button.on:before {
+    box-shadow: none;
+}
+
+#custom-dialogue-box > .button-tray > button:last-child {
+    margin-left: 10px;
+}

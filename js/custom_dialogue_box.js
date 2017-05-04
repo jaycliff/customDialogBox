@@ -41,7 +41,7 @@ if (typeof String.prototype.trim !== "function") {
         return element.dispatchEvent(event_object);
     }
     $document.ready(function () {
-        var custom_dialogue_box, id = 'custom-dialogue-box', has_class_list = !!document.documentElement.classList;
+        var custom_dialogue_box, id = 'custom-dialogue-box', has_class_list = !!document.documentElement.classList, hasOwnProperty = Object.prototype.hasOwnProperty;
         (function setupDialogMarkup() {
             var overlay = document.createElement('div'),
                 cdb = document.createElement('div'),
@@ -91,6 +91,7 @@ if (typeof String.prototype.trim !== "function") {
             document.body.appendChild(overlay);
             custom_dialogue_box = (function () {
                 var active = false,
+                    safe_mode = false, // only used for confirm dialogue box
                     callback_priority = false,
                     last_focused_element,
                     entry_object_pool,
@@ -152,7 +153,11 @@ if (typeof String.prototype.trim !== "function") {
                             $prompt_wrap.hide();
                             $ok.text('Yes');
                             $cancel.text('No').show();
-                            $ok.trigger('focus');
+                            if (safe_mode) {
+                                $cancel.trigger('focus');
+                            } else {
+                                $ok.trigger('focus');
+                            }
                             break;
                         case 'prompt':
                             $prompt_wrap.show();
@@ -467,7 +472,7 @@ if (typeof String.prototype.trim !== "function") {
                         'banish': function (entry) {
                             var key;
                             for (key in entry) {
-                                if (Object.prototype.hasOwnProperty.call(entry, key)) {
+                                if (hasOwnProperty.call(entry, key)) {
                                     delete entry[key];
                                 }
                             }
@@ -525,6 +530,10 @@ if (typeof String.prototype.trim !== "function") {
                             break;
                         default:
                             entry.title = (b === undefined) ? (is_original_default_title ? default_title + capitaliseFirstLetter(type) : default_title) : stringify(b);
+                            // c as safe mode parameter (The "No" button is focused by default)
+                            if (type === 'confirm' && !!c) {
+                                entry.safe = true;
+                            }
                         }
                         if (callback_priority) {
                             list_of_prioritized_entries.push(entry);
@@ -575,24 +584,29 @@ if (typeof String.prototype.trim !== "function") {
                     setOption: function (option_name, value) {
                         switch (option_name.toLowerCase()) {
                         case 'fade_speed':
-                            fade_speed = value;
+                            fade_speed = Number(value);
                             break;
                         case 'default_title':
-                            default_title = value;
+                            default_title = String(value);
                             if (is_original_default_title) {
                                 is_original_default_title = false;
                             }
                             break;
                         case 'restore_defaults':
-                            if (value) {
+                            if (!!value) {
                                 fade_speed = 80;
                                 default_title = 'JavaScript ';
                                 is_original_default_title = true;
+                                safe_mode = false;
                             }
+                            break;
+                        case 'safe_mode':
+                            safe_mode = !!value;
                             break;
                         default:
                             custom_dialogue_box.alert('Invalid option name "' + option_name + '"', 'Set Option Error');
                         }
+                        return this;
                     }
                 };
             }());
@@ -604,7 +618,7 @@ if (typeof String.prototype.trim !== "function") {
                     };
                 };
                 for (key in custom_dialogue_box) {
-                    if (Object.prototype.hasOwnProperty.call(custom_dialogue_box, key)) {
+                    if (hasOwnProperty.call(custom_dialogue_box, key)) {
                         custom_dialogue_box[key].toString = toStringer(key);
                     }
                 }

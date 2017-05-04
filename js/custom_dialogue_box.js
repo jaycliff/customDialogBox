@@ -1,5 +1,5 @@
 /*
-    Copyright 2016 Jaycliff Arcilla of Eversun Software Philippines Corporation (Davao Branch)
+    Copyright 2017 Jaycliff Arcilla of Eversun Software Philippines Corporation (Davao Branch)
     
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
@@ -223,7 +223,9 @@ if (typeof String.prototype.trim !== "function") {
                 (function () {
                     var sb_active = false, keyupHandler = function (event) {
                         var active_element = document.activeElement, $active_element;
+                        event.preventDefault(); // Prevents click simulation in Firefox.
                         event.stopImmediatePropagation();
+                        // SPACEBAR
                         if (event.which === 32) {
                             if (active_element !== prompt_input) { // If the active element is either ok or cancel...
                                 $active_element = $.data(active_element, '$this');
@@ -409,8 +411,8 @@ if (typeof String.prototype.trim !== "function") {
                             break;
                         // SPACEBAR
                         case 32:
+                            event.preventDefault();
                             if (!sb_active && (document.activeElement === ok || document.activeElement === cancel)) {
-                                event.preventDefault();
                                 sb_active = true;
                                 if (has_class_list) {
                                     document.activeElement.classList.add(button_active_class);

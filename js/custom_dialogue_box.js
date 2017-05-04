@@ -501,13 +501,20 @@ if (typeof String.prototype.trim !== "function") {
                     var entry,
                         thenner = function (callback) { entry.callback = callback; },
                         then_carrier = {
-                            then: thenner,
-                            andThen: thenner,
-                            thenDo: thenner,
-                            callback: thenner,
-                            call: thenner,
-                            next: thenner,
-                            so: thenner
+                            "after": thenner,
+                            "andDo": thenner,
+                            "andThen": thenner,
+                            "andSo": thenner,
+                            "call": thenner,
+                            "callback": thenner,
+                            "do": thenner,
+                            "evaluate": thenner,
+                            "next": thenner,
+                            "process": thenner,
+                            "so": thenner,
+                            "then": thenner,
+                            "thenCall": thenner,
+                            "thenDo": thenner
                         },
                         forNextCycle = function () {
                             $overlay.stop().fadeIn(fade_speed);

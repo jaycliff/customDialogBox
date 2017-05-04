@@ -41,7 +41,29 @@ if (typeof String.prototype.trim !== "function") {
         return element.dispatchEvent(event_object);
     }
     $document.ready(function () {
-        var custom_dialogue_box, id = 'custom-dialogue-box', has_class_list = !!document.documentElement.classList, hasOwnProperty = Object.prototype.hasOwnProperty;
+        var custom_dialogue_box,
+            id = 'custom-dialogue-box',
+            has_class_list = !!document.documentElement.classList,
+            hasOwnProperty = Object.prototype.hasOwnProperty, 
+            methodToStringer = (function () {
+                var toStringer = function (key) {
+                    return function () {
+                        return 'function ' + key + '() { [imagi-native code] }';
+                    };
+                };
+                return function methodToStringer(obj) {
+                    var key, item;
+                    for (key in obj) {
+                        if (hasOwnProperty.call(obj, key)) {
+                            item = obj[key];
+                            if (typeof item === "function") {
+                                item.toString = toStringer(key);
+                            }
+                        }
+                    }
+                    return obj;
+                };
+            }());
         (function setupDialogMarkup() {
             var overlay = document.createElement('div'),
                 cdb = document.createElement('div'),
@@ -93,6 +115,7 @@ if (typeof String.prototype.trim !== "function") {
                 var active = false,
                     safe_mode = false, // only used for confirm dialogue box
                     callback_priority = false,
+                    cdb_object,
                     last_focused_element,
                     entry_object_pool,
                     entry_type = '',
@@ -499,7 +522,10 @@ if (typeof String.prototype.trim !== "function") {
                 }
                 (function () {
                     var entry,
-                        thenner = function (callback) { entry.callback = callback; },
+                        thenner = function (callback) {
+                            entry.callback = callback;
+                            return cdb_object;
+                        },
                         then_carrier = {
                             "after": thenner,
                             "andDo": thenner,
@@ -520,6 +546,10 @@ if (typeof String.prototype.trim !== "function") {
                             $overlay.stop().fadeIn(fade_speed);
                             displayEntry();
                         };
+                    // Easter egg
+                    thenner.toString = function () {
+                        return 'function () { [imagi-native code] }';
+                    };
                     if (Object.freeze) {
                         Object.freeze(then_carrier);
                     }
@@ -573,7 +603,7 @@ if (typeof String.prototype.trim !== "function") {
                         return then_carrier;
                     };
                 }());
-                return {
+                cdb_object = {
                     alert: function (a, b) {
                         // Start emulation on how the native 'alert' handles the undefined value
                         if (a === undefined) {
@@ -616,22 +646,8 @@ if (typeof String.prototype.trim !== "function") {
                         return this;
                     }
                 };
+                return methodToStringer(cdb_object);
             }());
-            // Start random easter egg
-            (function () {
-                var key, toStringer = function (key) {
-                    return function () {
-                        return 'function ' + key + '() { [imagi-native code] }';
-                    };
-                };
-                for (key in custom_dialogue_box) {
-                    if (hasOwnProperty.call(custom_dialogue_box, key)) {
-                        custom_dialogue_box[key].toString = toStringer(key);
-                    }
-                }
-                key = null;
-            }());
-            // End random easter egg
         }());
         if (typeof Object.defineProperty === "function") {
             Object.defineProperty(global, 'custom_dialogue_box', {

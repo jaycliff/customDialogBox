@@ -114,4 +114,10 @@ $.custom_dialogue_box.setOption('fade_speed', 1000);
 
 // Set the default title to an empty string (The default is "JavaScript <type of dialogue box>").
 $.custom_dialogue_box.setOption('default_title', '');
+
+// Turn on "safe mode" (The "No" button is focused by default for the confirm dialogue box)
+$.custom_dialogue_box.setOption('safe_mode', true);
+
+// Restore the default dialogue box settings
+$.custom_dialogue_box.setOption('restore_defaults', true);
 ```

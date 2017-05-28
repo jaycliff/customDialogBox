@@ -433,13 +433,16 @@ if (typeof String.prototype.trim !== "function") {
                                 }
                             }
                             break;
+                        // ESC
                         case 27:
                             event.preventDefault();
                             $close.trigger('click');
                             break;
                         // SPACEBAR
                         case 32:
-                            event.preventDefault();
+                            if (document.activeElement !== prompt_input) {
+                                event.preventDefault();
+                            }
                             if (!sb_active && (document.activeElement === ok || document.activeElement === cancel)) {
                                 sb_active = true;
                                 if (has_class_list) {
